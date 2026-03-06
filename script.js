@@ -29,6 +29,8 @@ const animatronics = {
     "Erro": { name: "O Erro", emoji: '🟨', pos: 'hidden', ai: [0, 0, 0, 0, 1, 2] }
 };
 
+let attackInNextTick = { Coelho: false, Ave: false, Observador: false };
+
 // --- DOM ELEMENTS ---
 const screens = {
     menu: document.getElementById('main-menu'),
@@ -46,41 +48,50 @@ const hud = {
     usage: document.getElementById('usage-bars')
 };
 
+// --- SOUNDS ---
+const sounds = {
+    door: new Audio('https://www.soundjay.com/nature/sounds/iron-gate-close-1.mp3'),
+    light: new Audio('https://www.soundjay.com/buttons/sounds/button-20.mp3'),
+    monitor: new Audio('https://www.soundjay.com/buttons/sounds/button-29.mp3'),
+    jumpscare: new Audio('https://www.soundjay.com/creatures/sounds/zombie-growl-3.mp3'),
+    powerout: new Audio('https://www.soundjay.com/mechanical/sounds/power-off-1.mp3')
+};
+
+function playSound(s) {
+    if (sounds[s]) {
+        sounds[s].currentTime = 0;
+        sounds[s].play().catch(() => { });
+    }
+}
+
 // --- INIT ---
 function init() {
     loadProgress();
 
-    // Menu
     document.getElementById('btn-new-game').onclick = () => startGame(1);
     document.getElementById('btn-continue').onclick = () => startGame(currentNight);
     document.getElementById('btn-next-night').onclick = () => startGame(currentNight);
 
-    // Retry Button Corrected
     const retryBtn = document.getElementById('btn-retry');
     if (retryBtn) retryBtn.onclick = () => window.location.reload();
 
-    // Controls
-    document.getElementById('btn-door-left').onclick = (e) => { e.stopPropagation(); toggleDoor('left'); };
-    document.getElementById('btn-light-left').onclick = (e) => { e.stopPropagation(); toggleLight('left'); };
-    document.getElementById('btn-door-right').onclick = (e) => { e.stopPropagation(); toggleDoor('right'); };
-    document.getElementById('btn-light-right').onclick = (e) => { e.stopPropagation(); toggleLight('right'); };
+    document.getElementById('btn-door-left').onclick = (e) => toggleDoor('left');
+    document.getElementById('btn-light-left').onclick = (e) => toggleLight('left');
+    document.getElementById('btn-door-right').onclick = (e) => toggleDoor('right');
+    document.getElementById('btn-light-right').onclick = (e) => toggleLight('right');
 
-    // Tablet Hover (Shared at bottom)
     document.getElementById('monitor-toggle').onmouseenter = () => { if (!isMonitorOpen) toggleMonitor(); };
     document.getElementById('monitor-toggle-down').onmouseenter = () => { if (isMonitorOpen) toggleMonitor(); };
 
-    // Panning Logic
     document.getElementById('office').onmousemove = (e) => {
         if (isMonitorOpen) return;
         const panner = document.getElementById('office-panner');
-        const containerWidth = 1024;
-        const pannerWidth = 1600;
         const rect = screens.office.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
-        const percent = mouseX / containerWidth;
-        const targetLeft = -(pannerWidth - containerWidth) * percent;
-        panner.style.left = targetLeft + 'px';
+        const percent = mouseX / 1024;
+        panner.style.left = -(1600 - 1024) * percent + 'px';
     };
+
     document.querySelectorAll('.cam-btn').forEach(btn => {
         btn.onclick = () => switchCamera(btn.dataset.cam);
     });
@@ -92,7 +103,6 @@ function startGame(night) {
     currentNight = night;
     resetState();
     showScreen('office');
-
     gameTick = setInterval(updateTime, GAME_HOUR_MS);
     energyTick = setInterval(updateEnergy, 1000);
     aiTick = setInterval(updateAI, 5000);
@@ -113,7 +123,8 @@ function resetState() {
     isRightLightOn = false;
     currentCam = '1';
 
-    // UI Reset
+    attackInNextTick = { Coelho: false, Ave: false, Observador: false };
+
     hud.time.innerText = '12:00 AM';
     hud.energy.innerText = '100';
     hud.night.innerText = `Noite ${currentNight}`;
@@ -127,9 +138,8 @@ function resetState() {
     document.getElementById('hallway-left').classList.remove('lit');
     document.getElementById('hallway-right').classList.remove('lit');
     document.body.classList.remove('power-out');
-    document.getElementById('office-panner').style.left = '-288px'; // Center start
+    document.getElementById('office-panner').style.left = '-288px';
 
-    // AI Reset
     animatronics.Coelho.pos = '1';
     animatronics.Ave.pos = '1';
     animatronics.Corredor.pos = '3';
@@ -145,7 +155,6 @@ function showScreen(id) {
     screens[id].classList.add('active');
 }
 
-// --- SYSTEMS ---
 function updateTime() {
     timeHour++;
     if (timeHour === 6) winGame();
@@ -168,31 +177,11 @@ function updateUsage() {
     if (isLeftLightOn) usage++;
     if (isRightLightOn) usage++;
     if (isMonitorOpen) usage++;
-
     let b = '|';
     for (let i = 1; i < usage; i++) b += '|';
     hud.usage.innerText = b;
 }
 
-// --- SOUNDS ---
-const sounds = {
-    door: new Audio('https://www.soundjay.com/nature/sounds/iron-gate-close-1.mp3'),
-    light: new Audio('https://www.soundjay.com/buttons/sounds/button-20.mp3'),
-    monitor: new Audio('https://www.soundjay.com/buttons/sounds/button-29.mp3'),
-    jumpscare: new Audio('https://www.soundjay.com/creatures/sounds/zombie-growl-3.mp3'),
-    powerout: new Audio('https://www.soundjay.com/mechanical/sounds/power-off-1.mp3'),
-    fan: new Audio('https://www.soundjay.com/mechanical/sounds/fan-1.mp3') // Placeholder
-};
-
-// Play helper
-function playSound(s) {
-    if (sounds[s]) {
-        sounds[s].currentTime = 0;
-        sounds[s].play().catch(() => { }); // Catch browser block
-    }
-}
-
-// --- GAMEPLAY OVERRIDES ---
 function toggleDoor(side) {
     if (powerOut) return;
     playSound('door');
@@ -215,13 +204,12 @@ function toggleLight(side) {
         isLeftLightOn = !isLeftLightOn;
         document.getElementById('hallway-left').classList.toggle('lit', isLeftLightOn);
         document.getElementById('btn-light-left').classList.toggle('active', isLeftLightOn);
-        renderDoorVisual('left');
     } else {
         isRightLightOn = !isRightLightOn;
         document.getElementById('hallway-right').classList.toggle('lit', isRightLightOn);
         document.getElementById('btn-light-right').classList.toggle('active', isRightLightOn);
-        renderDoorVisual('right');
     }
+    renderDoorVisual(side);
     updateUsage();
 }
 
@@ -229,10 +217,9 @@ function toggleMonitor() {
     if (powerOut) return;
     playSound('monitor');
     isMonitorOpen = !isMonitorOpen;
-
     if (isMonitorOpen) {
         screens.cams.classList.add('active');
-        switchCamera(currentCam); // This will handle rendering
+        switchCamera(currentCam);
     } else {
         screens.cams.classList.remove('active');
         if (animatronics.Erro.pos === currentCam) triggerJumpscare('Erro');
@@ -243,40 +230,75 @@ function toggleMonitor() {
 function switchCamera(id) {
     currentCam = id;
     document.querySelectorAll('.cam-btn').forEach(b => b.classList.toggle('active', b.dataset.cam === id));
-
-    // Static effect
     const s = document.getElementById('static-overlay');
     s.classList.add('heavy');
     setTimeout(() => s.classList.remove('heavy'), 150);
-
     const names = { '1': 'PALCO', '2': 'COZINHA', '3': 'COVA', '4a': 'CORREDOR ESQ', '4b': 'CANTO ESQ', '5a': 'CORREDOR DIR', '5b': 'CANTO DIR' };
-    const elCamName = document.getElementById('cam-name');
-    if (elCamName) elCamName.innerText = `CAM ${id.toUpperCase()} - ${names[id] || '???'}`;
-
+    document.getElementById('cam-name').innerText = `CAM ${id.toUpperCase()} - ${names[id] || '???'}`;
     renderCamView(id);
 }
 
-// --- AI BRAIN (REFACTORED FOR TICKS) ---
-let attackInNextTick = { Coelho: false, Ave: false, Observador: false };
+function updateAI() {
+    if (powerOut) return;
+    moveAnim('Coelho');
+    moveAnim('Ave');
+    moveFoxy();
+    moveFreddy();
+    if (isMonitorOpen) renderCamView(currentCam);
+    renderDoorVisual('left');
+    renderDoorVisual('right');
+    checkAttacks();
+}
+
+function moveAnim(key) {
+    let a = animatronics[key];
+    let lvl = a.ai[currentNight];
+    if (lvl === 0) return;
+    if (Math.random() * 20 < lvl) {
+        let idx = a.route.indexOf(a.pos);
+        if (idx < a.route.length - 1) a.pos = a.route[idx + 1];
+    }
+}
+
+function moveFoxy() {
+    let a = animatronics.Corredor;
+    let lvl = a.ai[currentNight];
+    if (lvl === 0 || (isMonitorOpen && currentCam === '3')) return;
+    if (Math.random() * 20 < lvl) {
+        if (a.state < 3) a.state++;
+        else {
+            a.pos = 'office';
+            setTimeout(() => {
+                if (isLeftDoorClosed) { a.pos = '3'; a.state = 0; energy -= 8; }
+                else triggerJumpscare('Corredor');
+            }, 3000);
+        }
+    }
+}
+
+function moveFreddy() {
+    let a = animatronics.Observador;
+    let lvl = a.ai[currentNight];
+    if (lvl === 0 || isMonitorOpen) return;
+    if (Math.random() * 20 < lvl) {
+        let idx = a.route.indexOf(a.pos);
+        if (idx < a.route.length - 1) a.pos = a.route[idx + 1];
+    }
+}
 
 function checkAttacks() {
-    // Logic: If enemy is at office (pos === 'office'), it waits ONE TICK before jumpscaring.
-    // If the door is closed during that wait, it recedes.
-
-    // Coelho (Left)
+    // Coelho
     if (animatronics.Coelho.pos === 'office') {
         if (isLeftDoorClosed) {
             animatronics.Coelho.pos = ['4a', '4b'][Math.floor(Math.random() * 2)];
             attackInNextTick.Coelho = false;
         } else {
             if (attackInNextTick.Coelho) triggerJumpscare('Coelho');
-            else attackInNextTick.Coelho = true; // Mark to attack next tick
+            else attackInNextTick.Coelho = true;
         }
-    } else {
-        attackInNextTick.Coelho = false;
-    }
+    } else attackInNextTick.Coelho = false;
 
-    // Ave (Right)
+    // Ave
     if (animatronics.Ave.pos === 'office') {
         if (isRightDoorClosed) {
             animatronics.Ave.pos = ['5a', '5b'][Math.floor(Math.random() * 2)];
@@ -285,11 +307,9 @@ function checkAttacks() {
             if (attackInNextTick.Ave) triggerJumpscare('Ave');
             else attackInNextTick.Ave = true;
         }
-    } else {
-        attackInNextTick.Ave = false;
-    }
+    } else attackInNextTick.Ave = false;
 
-    // Freddy (Observador)
+    // Freddy
     if (animatronics.Observador.pos === 'office') {
         if (isRightDoorClosed) {
             animatronics.Observador.pos = ['5a', '5b'][Math.floor(Math.random() * 2)];
@@ -298,28 +318,41 @@ function checkAttacks() {
             if (attackInNextTick.Observador) triggerJumpscare('Observador');
             else attackInNextTick.Observador = true;
         }
-    } else {
-        attackInNextTick.Observador = false;
-    }
+    } else attackInNextTick.Observador = false;
 }
 
-// --- ENDINGS ---
+function renderCamView(id) {
+    let html = '';
+    if (id === '2') html = '<div style="font-size:20px">- SEM SINAL -</div>';
+    else if (id === '3') {
+        let s = animatronics.Corredor.state;
+        html = s === 0 ? '🏕️' : (s === 1 ? '🏕️🦊' : '🦊');
+    }
+    for (let k in animatronics) {
+        if (animatronics[k].pos === id && k !== 'Corredor') html += animatronics[k].emoji;
+    }
+    document.getElementById('animatronics-view').innerHTML = html;
+}
+
+function renderDoorVisual(side) {
+    const el = document.getElementById(side === 'left' ? 'hallway-left' : 'hallway-right');
+    const isLit = side === 'left' ? isLeftLightOn : isRightLightOn;
+    let found = '';
+    if (isLit) {
+        if (side === 'left' && animatronics.Coelho.pos === '4b') found = animatronics.Coelho.emoji;
+        if (side === 'right' && (animatronics.Ave.pos === '5b' || animatronics.Observador.pos === '5b')) {
+            found = animatronics.Ave.pos === '5b' ? animatronics.Ave.emoji : animatronics.Observador.emoji;
+        }
+    }
+    el.innerText = found;
+}
+
 function triggerPowerOut() {
     powerOut = true;
     playSound('powerout');
     document.body.classList.add('power-out');
-    // ... rest of logic remains same but now with sound
-
-
-    // UI Reset - Force everything off
-    isLeftDoorClosed = false;
-    isRightDoorClosed = false;
-    isLeftLightOn = false;
-    isRightLightOn = false;
-
-    if (isMonitorOpen) toggleMonitor(); // Force close tablet
-
-    // Update Styles
+    isLeftDoorClosed = isRightDoorClosed = isLeftLightOn = isRightLightOn = false;
+    if (isMonitorOpen) toggleMonitor();
     document.getElementById('door-left').classList.remove('closed');
     document.getElementById('door-right').classList.remove('closed');
     document.getElementById('btn-door-left').classList.remove('active');
@@ -328,26 +361,14 @@ function triggerPowerOut() {
     document.getElementById('btn-light-right').classList.remove('active');
     document.getElementById('hallway-left').classList.remove('lit');
     document.getElementById('hallway-right').classList.remove('lit');
-
     updateUsage();
-
-    // Stop standard game loops
     if (gameTick) clearInterval(gameTick);
     if (aiTick) clearInterval(aiTick);
-
-    // 30 seconds wait for Freddy's attack
-    setTimeout(() => {
-        if (!screens.menu.classList.contains('active')) {
-            triggerJumpscare('Observador');
-        }
-    }, 30000);
+    setTimeout(() => { if (!screens.menu.classList.contains('active')) triggerJumpscare('Observador'); }, 30000);
 }
 
 function triggerJumpscare(key) {
-    if (gameTick) clearInterval(gameTick);
-    if (energyTick) clearInterval(energyTick);
-    if (aiTick) clearInterval(aiTick);
-
+    if (gameTick) clearInterval(gameTick); if (energyTick) clearInterval(energyTick); if (aiTick) clearInterval(aiTick);
     playSound('jumpscare');
     showScreen('jumpscare');
     document.getElementById('jumpscare-img').innerText = animatronics[key].emoji;
@@ -355,20 +376,16 @@ function triggerJumpscare(key) {
 }
 
 function winGame() {
-    if (gameTick) clearInterval(gameTick);
-    if (energyTick) clearInterval(energyTick);
-    if (aiTick) clearInterval(aiTick);
+    if (gameTick) clearInterval(gameTick); if (energyTick) clearInterval(energyTick); if (aiTick) clearInterval(aiTick);
     showScreen('win');
     saveProgress(currentNight + 1);
 }
 
 function loadProgress() {
     let s = localStorage.getItem('nightfall_night');
-    if (s) { currentNight = parseInt(s); document.getElementById('btn-continue').disabled = false; }
+    if (s) { currentNight = parseInt(s); document.getElementById('btn-continue').disabled = false; document.getElementById('save-night').innerText = currentNight; }
 }
 
-function saveProgress(n) {
-    localStorage.setItem('nightfall_night', n > 5 ? 5 : n);
-}
+function saveProgress(n) { localStorage.setItem('nightfall_night', n > 5 ? 5 : n); }
 
 init();
