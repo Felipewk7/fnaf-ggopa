@@ -174,8 +174,28 @@ function updateUsage() {
     hud.usage.innerText = b;
 }
 
+// --- SOUNDS ---
+const sounds = {
+    door: new Audio('https://www.soundjay.com/nature/sounds/iron-gate-close-1.mp3'),
+    light: new Audio('https://www.soundjay.com/buttons/sounds/button-20.mp3'),
+    monitor: new Audio('https://www.soundjay.com/buttons/sounds/button-29.mp3'),
+    jumpscare: new Audio('https://www.soundjay.com/creatures/sounds/zombie-growl-3.mp3'),
+    powerout: new Audio('https://www.soundjay.com/mechanical/sounds/power-off-1.mp3'),
+    fan: new Audio('https://www.soundjay.com/mechanical/sounds/fan-1.mp3') // Placeholder
+};
+
+// Play helper
+function playSound(s) {
+    if (sounds[s]) {
+        sounds[s].currentTime = 0;
+        sounds[s].play().catch(() => { }); // Catch browser block
+    }
+}
+
+// --- GAMEPLAY OVERRIDES ---
 function toggleDoor(side) {
     if (powerOut) return;
+    playSound('door');
     if (side === 'left') {
         isLeftDoorClosed = !isLeftDoorClosed;
         document.getElementById('door-left').classList.toggle('closed', isLeftDoorClosed);
@@ -190,6 +210,7 @@ function toggleDoor(side) {
 
 function toggleLight(side) {
     if (powerOut) return;
+    playSound('light');
     if (side === 'left') {
         isLeftLightOn = !isLeftLightOn;
         document.getElementById('hallway-left').classList.toggle('lit', isLeftLightOn);
@@ -206,7 +227,9 @@ function toggleLight(side) {
 
 function toggleMonitor() {
     if (powerOut) return;
+    playSound('monitor');
     isMonitorOpen = !isMonitorOpen;
+
     if (isMonitorOpen) {
         screens.cams.classList.add('active');
         switchCamera(currentCam);
@@ -217,141 +240,60 @@ function toggleMonitor() {
     updateUsage();
 }
 
-function switchCamera(id) {
-    currentCam = id;
-    document.querySelectorAll('.cam-btn').forEach(b => b.classList.toggle('active', b.dataset.cam === id));
-
-    // Static effect
-    const s = document.getElementById('static-overlay');
-    s.classList.add('heavy');
-    setTimeout(() => s.classList.remove('heavy'), 150);
-
-    const names = { '1': 'PALCO', '2': 'COZINHA', '3': 'COVA', '4a': 'CORREDOR ESQ', '4b': 'CANTO ESQ', '5a': 'CORREDOR DIR', '5b': 'CANTO DIR' };
-    document.getElementById('cam-name').innerText = `CAM ${id.toUpperCase()} - ${names[id] || '???'}`;
-
-    renderCamView(id);
-}
-
-// --- AI BRAIN ---
-function updateAI() {
-    if (powerOut) return; // Power out logic handled separately
-
-    moveAnim('Coelho');
-    moveAnim('Ave');
-    moveFoxy();
-    moveFreddy();
-
-    if (isMonitorOpen) renderCamView(currentCam);
-    renderDoorVisual('left');
-    renderDoorVisual('right');
-
-    checkAttacks();
-}
-
-function moveAnim(key) {
-    let a = animatronics[key];
-    let lvl = a.ai[currentNight];
-    if (lvl === 0) return;
-
-    if (Math.random() * 20 < lvl) {
-        let idx = a.route.indexOf(a.pos);
-        if (idx < a.route.length - 1) {
-            // Check if they are already at the office door (the last step before 'office')
-            a.pos = a.route[idx + 1];
-        }
-    }
-}
-
-function moveFoxy() {
-    let a = animatronics.Corredor;
-    let lvl = a.ai[currentNight];
-    if (lvl === 0 || (isMonitorOpen && currentCam === '3')) return;
-    if (Math.random() * 20 < lvl) {
-        if (a.state < 3) a.state++;
-        else {
-            a.pos = 'office';
-            setTimeout(() => {
-                if (isLeftDoorClosed) {
-                    a.pos = '3'; a.state = 0;
-                    energy -= 8; // penalty
-                } else triggerJumpscare('Corredor');
-            }, 3000);
-        }
-    }
-}
-
-function moveFreddy() {
-    let a = animatronics.Observador;
-    let lvl = a.ai[currentNight];
-    if (lvl === 0 || isMonitorOpen) return;
-    if (Math.random() * 20 < lvl) {
-        let idx = a.route.indexOf(a.pos);
-        if (idx < a.route.length - 1) a.pos = a.route[idx + 1];
-    }
-}
+// --- AI BRAIN (REFACTORED FOR TICKS) ---
+let attackInNextTick = { Coelho: false, Ave: false, Observador: false };
 
 function checkAttacks() {
-    // Coelho (Left Door)
+    // Logic: If enemy is at office (pos === 'office'), it waits ONE TICK before jumpscaring.
+    // If the door is closed during that wait, it recedes.
+
+    // Coelho (Left)
     if (animatronics.Coelho.pos === 'office') {
-        if (!isLeftDoorClosed) {
-            triggerJumpscare('Coelho');
-        } else {
-            // Blocked by door: Recede to random previous room (not start)
+        if (isLeftDoorClosed) {
             animatronics.Coelho.pos = ['4a', '4b'][Math.floor(Math.random() * 2)];
+            attackInNextTick.Coelho = false;
+        } else {
+            if (attackInNextTick.Coelho) triggerJumpscare('Coelho');
+            else attackInNextTick.Coelho = true; // Mark to attack next tick
         }
+    } else {
+        attackInNextTick.Coelho = false;
     }
 
-    // Ave (Right Door)
+    // Ave (Right)
     if (animatronics.Ave.pos === 'office') {
-        if (!isRightDoorClosed) {
-            triggerJumpscare('Ave');
-        } else {
-            // Blocked by door: Recede to random previous room (not start)
+        if (isRightDoorClosed) {
             animatronics.Ave.pos = ['5a', '5b'][Math.floor(Math.random() * 2)];
+            attackInNextTick.Ave = false;
+        } else {
+            if (attackInNextTick.Ave) triggerJumpscare('Ave');
+            else attackInNextTick.Ave = true;
         }
+    } else {
+        attackInNextTick.Ave = false;
     }
 
     // Freddy (Observador)
     if (animatronics.Observador.pos === 'office') {
-        if (!isRightDoorClosed) {
-            triggerJumpscare('Observador');
-        } else {
+        if (isRightDoorClosed) {
             animatronics.Observador.pos = ['5a', '5b'][Math.floor(Math.random() * 2)];
+            attackInNextTick.Observador = false;
+        } else {
+            if (attackInNextTick.Observador) triggerJumpscare('Observador');
+            else attackInNextTick.Observador = true;
         }
+    } else {
+        attackInNextTick.Observador = false;
     }
-}
-
-function renderCamView(id) {
-    let html = '';
-    if (id === '2') html = '<div style="font-size:20px">- SEM SINAL -</div>';
-    else if (id === '3') {
-        let s = animatronics.Corredor.state;
-        html = s === 0 ? '🏕️' : (s === 1 ? '🏕️🦊' : '🦊');
-    }
-
-    for (let k in animatronics) {
-        if (animatronics[k].pos === id && k !== 'Corredor') html += animatronics[k].emoji;
-    }
-    document.getElementById('animatronics-view').innerHTML = html;
-}
-
-function renderDoorVisual(side) {
-    const el = document.getElementById(side === 'left' ? 'hallway-left' : 'hallway-right');
-    const isLit = side === 'left' ? isLeftLightOn : isRightLightOn;
-    let found = '';
-    if (isLit) {
-        if (side === 'left' && animatronics.Coelho.pos === '4b') found = animatronics.Coelho.emoji;
-        if (side === 'right' && (animatronics.Ave.pos === '5b' || animatronics.Observador.pos === '5b')) {
-            found = animatronics.Ave.pos === '5b' ? animatronics.Ave.emoji : animatronics.Observador.emoji;
-        }
-    }
-    el.innerText = found;
 }
 
 // --- ENDINGS ---
 function triggerPowerOut() {
     powerOut = true;
+    playSound('powerout');
     document.body.classList.add('power-out');
+    // ... rest of logic remains same but now with sound
+
 
     // UI Reset - Force everything off
     isLeftDoorClosed = false;
@@ -390,6 +332,7 @@ function triggerJumpscare(key) {
     if (energyTick) clearInterval(energyTick);
     if (aiTick) clearInterval(aiTick);
 
+    playSound('jumpscare');
     showScreen('jumpscare');
     document.getElementById('jumpscare-img').innerText = animatronics[key].emoji;
     setTimeout(() => { showScreen('gameover'); }, 2000);

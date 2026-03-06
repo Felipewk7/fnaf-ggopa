@@ -317,7 +317,16 @@ body {
 
 /* CAMERA SYSTEM */
 #camera-system {
-    background: #000;
+    background-color: #000;
+    z-index: 150;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block !important;
+    /* Managed by transform now */
+}
+
+#camera-system.active {
+    transform: translateY(0);
 }
 
 .cam-feed {
