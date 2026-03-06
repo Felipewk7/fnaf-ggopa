@@ -80,8 +80,17 @@ function init() {
     document.getElementById('btn-door-right').onclick = (e) => toggleDoor('right');
     document.getElementById('btn-light-right').onclick = (e) => toggleLight('right');
 
-    document.getElementById('monitor-toggle').onmouseenter = () => { if (!isMonitorOpen) toggleMonitor(); };
-    document.getElementById('monitor-toggle-down').onmouseenter = () => { if (isMonitorOpen) toggleMonitor(); };
+    let monitorCooldown = false;
+    const monitorToggle = document.getElementById('monitor-toggle');
+    if (monitorToggle) {
+        monitorToggle.onmouseenter = () => {
+            if (!monitorCooldown) {
+                toggleMonitor();
+                monitorCooldown = true;
+                setTimeout(() => monitorCooldown = false, 500);
+            }
+        };
+    }
 
     document.getElementById('office').onmousemove = (e) => {
         if (isMonitorOpen) return;
