@@ -120,13 +120,14 @@ body {
     color: #666;
 }
 
-/* OFFICE HUD */
+/* OFFICE HUD - Fixed always on top */
 #hud {
     position: absolute;
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 100;
+    z-index: 1800;
+    /* Above cameras, below jumpscares */
 }
 
 .hud-top-right {
@@ -227,19 +228,26 @@ body {
 
 .btn-door,
 .btn-light {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    border-radius: 5px;
     border: 2px solid #000;
     cursor: pointer;
     font-size: 10px;
     font-weight: bold;
-    color: transparent;
-    /* hide text, keep logical */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
 }
 
 .btn-door {
     background-color: #aa0000;
+}
+
+.btn-door::after {
+    content: "DOOR";
 }
 
 .btn-door.active {
@@ -248,11 +256,16 @@ body {
 }
 
 .btn-light {
-    background-color: #aaaaaa;
+    background-color: #666;
+}
+
+.btn-light::after {
+    content: "LIGHT";
 }
 
 .btn-light.active {
     background-color: #ffffff;
+    color: #000;
     box-shadow: 0 0 10px #ffffff;
 }
 
@@ -386,23 +399,29 @@ body {
     position: absolute;
     bottom: 50px;
     right: 50px;
-    width: 300px;
-    height: 300px;
-    background-color: rgba(50, 50, 50, 0.5);
+    width: 320px;
+    height: 320px;
+    background: rgba(0, 0, 0, 0.6) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320"><path d="M 120 40 L 200 40 L 200 120 L 280 120 L 280 280 L 40 280 L 40 120 L 120 120 Z" stroke="white" stroke-width="2" fill="none"/></svg>') no-repeat center center;
     border: 2px solid #555;
     z-index: 170;
 }
 
 .cam-btn {
     position: absolute;
-    background-color: #333;
-    border: 2px solid #fff;
+    background-color: #111;
+    border: 1px solid #fff;
     color: #fff;
-    padding: 5px;
+    padding: 2px 4px;
     font-family: 'VT323', monospace;
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
     text-align: center;
+    min-width: 45px;
+    transition: all 0.1s;
+}
+
+.cam-btn:hover {
+    background-color: #444;
 }
 
 .cam-btn.active {

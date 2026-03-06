@@ -80,8 +80,8 @@ function init() {
         startGame(currentNight);
     });
 
-    document.getElementById('monitor-toggle').addEventListener('click', toggleMonitor);
-    document.getElementById('monitor-toggle-down').addEventListener('click', toggleMonitor);
+    document.getElementById('monitor-toggle').addEventListener('mouseenter', toggleMonitor);
+    document.getElementById('monitor-toggle-down').addEventListener('mouseenter', toggleMonitor);
 
     elBtnDoorLeft.addEventListener('click', () => toggleDoor('left'));
     elBtnLightLeft.addEventListener('click', () => toggleLight('left'));
