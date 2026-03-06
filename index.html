@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Nightfall</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Main Menu -->
+        <div id="main-menu" class="screen active">
+            <h1 class="glitch" data-text="PROJECT NIGHTFALL">PROJECT NIGHTFALL</h1>
+            <div id="menu-options">
+                <button id="btn-new-game">Nova Escuridão (Noite 1)</button>
+                <button id="btn-continue" disabled>Continuar (Noite <span id="save-night">1</span>)</button>
+            </div>
+            <div class="warning">Cuidado: Contém luzes piscantes e sustos.</div>
+        </div>
+
+        <!-- Office View -->
+        <div id="office" class="screen">
+            <!-- HUD -->
+            <div id="hud">
+                <div class="hud-top-right">
+                    <div id="time">12:00 AM</div>
+                    <div id="nightdisplay">Noite 1</div>
+                </div>
+                <div class="hud-bottom-left">
+                    <div id="energy-label">Energia: <span id="energy-val">100</span>%</div>
+                    <div id="usage-meter">Uso: <span id="usage-bars">|</span></div>
+                </div>
+            </div>
+
+            <!-- Environment -->
+            <div id="room">
+                <!-- Left Door Area -->
+                <div class="door-area left">
+                    <div class="door-frame">
+                        <div id="door-left" class="door open"></div>
+                    </div>
+                    <div class="buttons-panel">
+                        <button id="btn-door-left" class="btn-door">PORTA</button>
+                        <button id="btn-light-left" class="btn-light">LUZ</button>
+                    </div>
+                    <div id="hallway-left" class="hallway"></div>
+                </div>
+
+                <!-- Desk/Center Area -->
+                <div class="desk">
+                    <div class="fan"></div>
+                    <div id="poster" class="poster"></div>
+                </div>
+
+                <!-- Right Door Area -->
+                <div class="door-area right">
+                    <div id="hallway-right" class="hallway"></div>
+                    <div class="door-frame">
+                        <div id="door-right" class="door open"></div>
+                    </div>
+                    <div class="buttons-panel">
+                        <button id="btn-door-right" class="btn-door">PORTA</button>
+                        <button id="btn-light-right" class="btn-light">LUZ</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monitor Toggle Button -->
+            <div id="monitor-toggle">
+                <div class="toggle-bar"></div>
+            </div>
+        </div>
+
+        <!-- Camera System -->
+        <div id="camera-system" class="screen">
+            <div class="crt-overlay"></div>
+            <div class="cam-feed">
+                <div id="static-overlay" class="static"></div>
+                <div id="cam-name">CAM 01 - Palco Principal</div>
+                <div id="cam-view">
+                     <!-- Animatronics container -->
+                     <div id="animatronics-view"></div>
+                </div>
+            </div>
+            
+            <div id="map">
+                <button class="cam-btn active" data-cam="1" style="bottom: 20%; right: 40%;">CAM 1<br>(Palco)</button>
+                <button class="cam-btn" data-cam="2" style="bottom: 40%; right: 20%;">CAM 2<br>(Cozinha)</button>
+                <button class="cam-btn" data-cam="3" style="bottom: 60%; left: 10%;">CAM 3<br>(Cova)</button>
+                <button class="cam-btn" data-cam="4a" style="bottom: 40%; left: 30%;">CAM 4A<br>(Cor. Esq)</button>
+                <button class="cam-btn" data-cam="4b" style="bottom: 20%; left: 30%;">CAM 4B<br>(Esq. Perto)</button>
+                <button class="cam-btn" data-cam="5a" style="bottom: 40%; right: 50%;">CAM 5A<br>(Cor. Dir)</button>
+                <button class="cam-btn" data-cam="5b" style="bottom: 20%; right: 60%;">CAM 5B<br>(Dir. Perto)</button>
+            </div>
+            
+            <!-- Monitor Toggle Button Bottom -->
+            <div id="monitor-toggle-down">
+                <div class="toggle-bar"></div>
+            </div>
+        </div>
+
+        <!-- Jumpscare Screen -->
+        <div id="jumpscare" class="screen">
+            <div id="jumpscare-img"></div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over" class="screen">
+            <div class="static opacity-medium"></div>
+            <h1>VOCÊ NÃO SOBREVIVEU</h1>
+            <p>O Fim.</p>
+            <button onclick="location.reload()">Tentar Novamente</button>
+        </div>
+
+        <!-- 6 AM Winner Screen -->
+        <div id="win-screen" class="screen">
+            <h1>06:00 AM</h1>
+            <p>Sobreviveu à noite.</p>
+            <button id="btn-next-night">Avançar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
