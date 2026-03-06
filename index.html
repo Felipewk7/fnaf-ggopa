@@ -35,45 +35,47 @@
 
         <!-- Office View -->
         <div id="office" class="screen">
-            <div id="room">
-                <!-- Left Door Area -->
-                <div class="door-area left">
-                    <div class="door-frame">
-                        <div id="door-left" class="door open"></div>
-                    </div>
-                    <div class="buttons-panel">
-                        <div class="btn-set">
-                            <div class="btn-label">PORTA</div>
-                            <button id="btn-door-left" class="btn-door"></button>
+            <div id="office-panner">
+                <div id="room">
+                    <!-- Left Door Area -->
+                    <div class="door-area left">
+                        <div class="door-frame">
+                            <div id="door-left" class="door open"></div>
                         </div>
-                        <div class="btn-set">
-                            <div class="btn-label">LUZ</div>
-                            <button id="btn-light-left" class="btn-light"></button>
+                        <div class="buttons-panel">
+                            <div class="btn-set">
+                                <div class="btn-label">PORTA</div>
+                                <button id="btn-door-left" class="btn-door"></button>
+                            </div>
+                            <div class="btn-set">
+                                <div class="btn-label">LUZ</div>
+                                <button id="btn-light-left" class="btn-light"></button>
+                            </div>
                         </div>
+                        <div id="hallway-left" class="hallway"></div>
                     </div>
-                    <div id="hallway-left" class="hallway"></div>
-                </div>
 
-                <!-- Center Area -->
-                <div class="desk">
-                    <div class="fan"></div>
-                    <div id="poster" class="poster"></div>
-                </div>
-
-                <!-- Right Door Area -->
-                <div class="door-area right">
-                    <div id="hallway-right" class="hallway"></div>
-                    <div class="door-frame">
-                        <div id="door-right" class="door open"></div>
+                    <!-- Center Area -->
+                    <div class="desk">
+                        <div class="fan"></div>
+                        <div id="poster" class="poster"></div>
                     </div>
-                    <div class="buttons-panel">
-                        <div class="btn-set">
-                            <div class="btn-label">PORTA</div>
-                            <button id="btn-door-right" class="btn-door"></button>
+
+                    <!-- Right Door Area -->
+                    <div class="door-area right">
+                        <div id="hallway-right" class="hallway"></div>
+                        <div class="door-frame">
+                            <div id="door-right" class="door open"></div>
                         </div>
-                        <div class="btn-set">
-                            <div class="btn-label">LUZ</div>
-                            <button id="btn-light-right" class="btn-light"></button>
+                        <div class="buttons-panel">
+                            <div class="btn-set">
+                                <div class="btn-label">PORTA</div>
+                                <button id="btn-door-right" class="btn-door"></button>
+                            </div>
+                            <div class="btn-set">
+                                <div class="btn-label">LUZ</div>
+                                <button id="btn-light-right" class="btn-light"></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -98,7 +100,6 @@
 
             <div id="map-container">
                 <div id="map">
-                    <!-- Tech layout as SVG background in CSS, buttons here -->
                     <button class="cam-btn active" data-cam="1" style="top: 20px; left: 100px;">1A</button>
                     <button class="cam-btn" data-cam="2" style="top: 80px; left: 220px;">2</button>
                     <button class="cam-btn" data-cam="3" style="top: 150px; left: 20px;">3</button>
@@ -110,7 +111,7 @@
                 <div class="map-label">MAPA DAS CÂMERAS</div>
             </div>
 
-            <!-- Monitor Hover Back -->
+            <!-- Monitor Hover Back (Same place as open) -->
             <div id="monitor-toggle-down" class="monitor-trigger">
                 <div class="trigger-bar"></div>
             </div>

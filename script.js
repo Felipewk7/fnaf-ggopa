@@ -56,14 +56,26 @@ function init() {
     document.getElementById('btn-next-night').onclick = () => startGame(currentNight);
 
     // Controls
-    document.getElementById('btn-door-left').onclick = () => toggleDoor('left');
-    document.getElementById('btn-light-left').onclick = () => toggleLight('left');
-    document.getElementById('btn-door-right').onclick = () => toggleDoor('right');
-    document.getElementById('btn-light-right').onclick = () => toggleLight('right');
+    document.getElementById('btn-door-left').onclick = (e) => { e.stopPropagation(); toggleDoor('left'); };
+    document.getElementById('btn-light-left').onclick = (e) => { e.stopPropagation(); toggleLight('left'); };
+    document.getElementById('btn-door-right').onclick = (e) => { e.stopPropagation(); toggleDoor('right'); };
+    document.getElementById('btn-light-right').onclick = (e) => { e.stopPropagation(); toggleLight('right'); };
 
-    // Tablet Hover
+    // Tablet Hover (Shared)
     document.getElementById('monitor-toggle').onmouseenter = () => { if (!isMonitorOpen) toggleMonitor(); };
     document.getElementById('monitor-toggle-down').onmouseenter = () => { if (isMonitorOpen) toggleMonitor(); };
+
+    // Panning Logic
+    document.getElementById('office').onmousemove = (e) => {
+        if (isMonitorOpen) return;
+        const panner = document.getElementById('office-panner');
+        const containerWidth = 1024;
+        const pannerWidth = 1600;
+        const mouseX = e.clientX - screens.office.getBoundingClientRect().left;
+        const percent = mouseX / containerWidth;
+        const targetLeft = -(pannerWidth - containerWidth) * percent;
+        panner.style.left = targetLeft + 'px';
+    };
 
     // Cams
     document.querySelectorAll('.cam-btn').forEach(btn => {
@@ -112,6 +124,7 @@ function resetState() {
     document.getElementById('hallway-left').classList.remove('lit');
     document.getElementById('hallway-right').classList.remove('lit');
     document.body.classList.remove('power-out');
+    document.getElementById('office-panner').style.left = '-288px'; // Center start
 
     // AI Reset
     animatronics.Coelho.pos = '1';
@@ -178,12 +191,12 @@ function toggleLight(side) {
         isLeftLightOn = !isLeftLightOn;
         document.getElementById('hallway-left').classList.toggle('lit', isLeftLightOn);
         document.getElementById('btn-light-left').classList.toggle('active', isLeftLightOn);
-        if (isLeftLightOn) renderDoorVisual('left');
+        renderDoorVisual('left');
     } else {
         isRightLightOn = !isRightLightOn;
         document.getElementById('hallway-right').classList.toggle('lit', isRightLightOn);
         document.getElementById('btn-light-right').classList.toggle('active', isRightLightOn);
-        if (isRightLightOn) renderDoorVisual('right');
+        renderDoorVisual('right');
     }
     updateUsage();
 }
@@ -269,9 +282,20 @@ function moveFreddy() {
 }
 
 function checkAttacks() {
-    if (animatronics.Coelho.pos === 'office' && !isMonitorOpen && !isLeftDoorClosed) triggerJumpscare('Coelho');
-    if (animatronics.Ave.pos === 'office' && !isMonitorOpen && !isRightDoorClosed) triggerJumpscare('Ave');
-    if (animatronics.Observador.pos === 'office' && !isMonitorOpen && !isRightDoorClosed) triggerJumpscare('Observador');
+    // Enemies only attack if they are in 'office' (at door) AND fail a lucky roll next ai tick
+    const rollAttack = (lvl) => Math.random() * 20 < (lvl + 2);
+
+    if (animatronics.Coelho.pos === 'office') {
+        if (!isLeftDoorClosed && rollAttack(animatronics.Coelho.ai[currentNight])) triggerJumpscare('Coelho');
+        else if (isLeftDoorClosed) animatronics.Coelho.pos = '1'; // Move back
+    }
+    if (animatronics.Ave.pos === 'office') {
+        if (!isRightDoorClosed && rollAttack(animatronics.Ave.ai[currentNight])) triggerJumpscare('Ave');
+        else if (isRightDoorClosed) animatronics.Ave.pos = '1';
+    }
+    if (animatronics.Observador.pos === 'office' && !isRightDoorClosed) {
+        if (rollAttack(animatronics.Observador.ai[currentNight])) triggerJumpscare('Observador');
+    }
 }
 
 function renderCamView(id) {
@@ -290,9 +314,12 @@ function renderCamView(id) {
 
 function renderDoorVisual(side) {
     const el = document.getElementById(side === 'left' ? 'hallway-left' : 'hallway-right');
+    const isLit = side === 'left' ? isLeftLightOn : isRightLightOn;
     let found = '';
-    if (side === 'left' && animatronics.Coelho.pos === '4b') found = animatronics.Coelho.emoji;
-    if (side === 'right' && animatronics.Ave.pos === '5b') found = animatronics.Ave.emoji;
+    if (isLit) {
+        if (side === 'left' && animatronics.Coelho.pos === '4b') found = animatronics.Coelho.emoji;
+        if (side === 'right' && animatronics.Ave.pos === '5b') found = animatronics.Ave.emoji;
+    }
     el.innerText = found;
 }
 
@@ -308,18 +335,24 @@ function resetStateUI() {
     isLeftDoorClosed = isRightDoorClosed = isLeftLightOn = isRightLightOn = false;
     document.getElementById('door-left').classList.remove('closed');
     document.getElementById('door-right').classList.remove('closed');
+    document.getElementById('hallway-left').classList.remove('lit');
+    document.getElementById('hallway-right').classList.remove('lit');
     updateUsage();
 }
 
 function triggerJumpscare(key) {
-    clearInterval(gameTick); clearInterval(energyTick); clearInterval(aiTick);
+    if (gameTick) clearInterval(gameTick);
+    if (energyTick) clearInterval(energyTick);
+    if (aiTick) clearInterval(aiTick);
     showScreen('jumpscare');
     document.getElementById('jumpscare-img').innerText = animatronics[key].emoji;
     setTimeout(() => { showScreen('gameover'); }, 2000);
 }
 
 function winGame() {
-    clearInterval(gameTick); clearInterval(energyTick); clearInterval(aiTick);
+    if (gameTick) clearInterval(gameTick);
+    if (energyTick) clearInterval(energyTick);
+    if (aiTick) clearInterval(aiTick);
     showScreen('win');
     saveProgress(currentNight + 1);
 }
