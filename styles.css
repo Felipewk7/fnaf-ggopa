@@ -74,28 +74,60 @@ body {
     display: flex !important;
 }
 
+/* HUD - MUST BE ALWAYS VISIBLE */
+#hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2100;
+    /* Highest priority, even above cameras */
+    text-shadow: 2px 2px 5px #000;
+}
+
+.hud-top-right {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    text-align: right;
+    font-size: 56px;
+}
+
+#nightdisplay {
+    font-size: 28px;
+}
+
+.hud-bottom-left {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    font-size: 32px;
+}
+
 /* MAIN MENU */
 #main-menu {
     flex-direction: column;
+    justify-content: center;
     align-items: flex-start;
-    padding: 50px;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768"><rect width="100%" height="100%" fill="%23111"/><text x="512" y="384" font-size="200" fill="%23222" text-anchor="middle" dominant-baseline="middle">O</text></svg>') no-repeat center center;
-    background-size: cover;
+    padding: 100px;
+    background: #111;
     z-index: 500;
-    /* Highest priority for menu */
 }
 
 #main-menu h1 {
-    font-size: 80px;
+    font-size: 100px;
     margin-bottom: 50px;
+    color: var(--red-alert);
 }
 
 #menu-options button {
     display: block;
     background: none;
     border: none;
-    color: #aaa;
-    font-size: 36px;
+    color: #666;
+    font-size: 40px;
     font-family: 'VT323', monospace;
     cursor: pointer;
     text-align: left;
@@ -108,97 +140,47 @@ body {
 }
 
 #menu-options button:disabled {
-    color: #333;
+    color: #222;
     cursor: not-allowed;
 }
 
-.warning {
-    position: absolute;
-    bottom: 20px;
-    left: 50px;
-    font-size: 20px;
-    color: #666;
-}
-
-/* OFFICE HUD - Fixed always on top */
-#hud {
+/* OFFICE */
+#room {
     position: absolute;
     width: 100%;
     height: 100%;
-    pointer-events: none;
-    z-index: 1800;
-    /* Above cameras, below jumpscares */
-}
-
-.hud-top-right {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    text-align: right;
-    font-size: 48px;
-}
-
-#nightdisplay {
-    font-size: 24px;
-}
-
-.hud-bottom-left {
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
-    font-size: 32px;
-}
-
-/* OFFICE ENVIRONMENT */
-#room {
-    position: absolute;
-    width: 120%;
-    /* wider for panning if we wanted, but let's keep it simple for now */
-    height: 100%;
-    left: -10%;
-    background: linear-gradient(to bottom, #1a1a1a 0%, #0d0d0d 100%);
+    background: linear-gradient(to bottom, #111, #000);
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
 .door-area {
-    width: 300px;
+    width: 250px;
     height: 100%;
-    position: relative;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 .door-frame {
-    width: 150px;
+    width: 180px;
     height: 500px;
-    background-color: #050505;
-    border: 10px solid #222;
-    position: absolute;
+    background: #000;
+    border: 8px solid #333;
     overflow: hidden;
-}
-
-.left .door-frame {
-    left: 80px;
-}
-
-.right .door-frame {
-    right: 80px;
+    position: relative;
 }
 
 .door {
     width: 100%;
     height: 100%;
-    background: repeating-linear-gradient(0deg,
-            #333,
-            #333 10px,
-            #222 10px,
-            #222 20px);
+    background: repeating-linear-gradient(0deg, #444 0px, #444 20px, #222 20px, #222 40px);
     position: absolute;
     top: -100%;
-    /* Open */
-    transition: top 0.3s ease-in-out;
+    transition: top 0.4s ease-in;
 }
 
 .door.closed {
@@ -206,143 +188,176 @@ body {
 }
 
 .buttons-panel {
-    width: 50px;
-    height: 150px;
-    background-color: #333;
-    border: 2px solid #111;
     position: absolute;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0;
+    gap: 15px;
+    padding: 10px;
+    background: #222;
+    border: 2px solid #555;
+    border-radius: 5px;
 }
 
 .left .buttons-panel {
-    left: 10px;
+    left: 0px;
 }
 
 .right .buttons-panel {
-    right: 10px;
+    right: 0px;
+}
+
+.btn-set {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.btn-label {
+    font-size: 14px;
+    color: #888;
 }
 
 .btn-door,
 .btn-light {
-    width: 35px;
-    height: 35px;
-    border-radius: 5px;
-    border: 2px solid #000;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #000;
     cursor: pointer;
-    font-size: 10px;
-    font-weight: bold;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-transform: uppercase;
-}
-
-.btn-door {
-    background-color: #aa0000;
-}
-
-.btn-door::after {
-    content: "DOOR";
+    background: #444;
 }
 
 .btn-door.active {
-    background-color: #ff3333;
-    box-shadow: 0 0 10px #ff3333;
-}
-
-.btn-light {
-    background-color: #666;
-}
-
-.btn-light::after {
-    content: "LIGHT";
+    background: #ff0000;
+    box-shadow: 0 0 15px #f00;
 }
 
 .btn-light.active {
-    background-color: #ffffff;
-    color: #000;
-    box-shadow: 0 0 10px #ffffff;
+    background: #ffffff;
+    box-shadow: 0 0 15px #fff;
 }
 
 .hallway {
     position: absolute;
-    width: 150px;
-    height: 500px;
-    background-color: #000;
-    opacity: 0.9;
+    width: 180px;
+    height: 480px;
+    background: #000;
     z-index: -1;
-    transition: background-color 0.1s;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 80px;
-}
-
-.left .hallway {
-    left: 80px;
-}
-
-.right .hallway {
-    right: 80px;
+    font-size: 100px;
 }
 
 .hallway.lit {
-    background-color: #2a2a2a;
-    opacity: 1;
+    background: #222;
 }
 
-.desk {
-    flex: 1;
-    height: 300px;
-    background-color: #2b2b2b;
-    border-top: 5px solid #1a1a1a;
-    align-self: flex-end;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* MONITOR TOGGLE */
-#monitor-toggle,
-#monitor-toggle-down {
+/* MONITOR TRIGGER (HOVER) */
+.monitor-trigger {
     position: absolute;
-    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 400px;
-    height: 50px;
+    width: 600px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.05);
+    z-index: 2200;
     cursor: pointer;
-    z-index: 200;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: background 0.3s;
 }
 
-.toggle-bar {
-    width: 200px;
-    height: 10px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 5px;
-    transition: background-color 0.2s;
+#monitor-toggle {
+    bottom: 0;
 }
 
-#monitor-toggle:hover .toggle-bar,
-#monitor-toggle-down:hover .toggle-bar {
-    background-color: rgba(255, 255, 255, 0.8);
+#monitor-toggle-down {
+    top: 0;
+}
+
+.monitor-trigger:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.trigger-bar {
+    width: 400px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 /* CAMERA SYSTEM */
 #camera-system {
-    background-color: #000;
-    z-index: 150;
+    background: #000;
 }
 
+.cam-feed {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#cam-name {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    font-size: 32px;
+    color: #fff;
+    z-index: 170;
+}
+
+#animatronics-view {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 200px;
+}
+
+/* MAP DESIGN */
+#map-container {
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    z-index: 180;
+}
+
+#map {
+    width: 350px;
+    height: 350px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #555;
+    position: relative;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="350" height="350" viewBox="0 0 350 350"><path d="M 120 40 L 230 40 L 230 140 L 310 140 L 310 310 L 40 310 L 40 140 L 120 140 Z" stroke="white" stroke-width="2" fill="none"/></svg>');
+}
+
+.map-label {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.cam-btn {
+    position: absolute;
+    background: #222;
+    border: 1px solid #fff;
+    color: #fff;
+    font-family: 'VT323', monospace;
+    font-size: 16px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.cam-btn.active {
+    background: var(--green-safe);
+    color: #000;
+}
+
+/* MISC */
 .crt-overlay {
     position: absolute;
     width: 100%;
@@ -350,7 +365,7 @@ body {
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
     background-size: 100% 2px, 3px 100%;
     pointer-events: none;
-    z-index: 160;
+    z-index: 1000;
 }
 
 .static {
@@ -359,163 +374,31 @@ body {
     height: 100%;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.3"/></svg>');
     opacity: 0.1;
-    pointer-events: none;
-    z-index: 155;
+    z-index: 160;
 }
 
 .static.heavy {
-    opacity: 0.8 !important;
-}
-
-.opacity-medium {
-    opacity: 0.3 !important;
-}
-
-#cam-name {
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    font-size: 36px;
-    z-index: 165;
-}
-
-#cam-view {
-    width: 100%;
-    height: 100%;
-    background-color: #111;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#animatronics-view {
-    font-size: 150px;
-    display: flex;
-    gap: 50px;
-}
-
-#map {
-    position: absolute;
-    bottom: 50px;
-    right: 50px;
-    width: 320px;
-    height: 320px;
-    background: rgba(0, 0, 0, 0.6) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320"><path d="M 120 40 L 200 40 L 200 120 L 280 120 L 280 280 L 40 280 L 40 120 L 120 120 Z" stroke="white" stroke-width="2" fill="none"/></svg>') no-repeat center center;
-    border: 2px solid #555;
-    z-index: 170;
-}
-
-.cam-btn {
-    position: absolute;
-    background-color: #111;
-    border: 1px solid #fff;
-    color: #fff;
-    padding: 2px 4px;
-    font-family: 'VT323', monospace;
-    font-size: 14px;
-    cursor: pointer;
-    text-align: center;
-    min-width: 45px;
-    transition: all 0.1s;
-}
-
-.cam-btn:hover {
-    background-color: #444;
-}
-
-.cam-btn.active {
-    background-color: var(--green-safe);
-    color: #000;
-}
-
-/* POWER OUT */
-.power-out #room {
-    background: #000;
-}
-
-.power-out .door.open {
-    top: -100%;
-}
-
-/* SCREENS */
-#game-over,
-#win-screen {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    /* Higher than office and cams */
-    background: #000;
-}
-
-#game-over h1 {
-    color: var(--red-alert);
-    font-size: 80px;
-    margin-bottom: 20px;
-}
-
-#win-screen h1 {
-    font-size: 120px;
-}
-
-#game-over button,
-#win-screen button {
-    margin-top: 50px;
-    padding: 10px 20px;
-    background: none;
-    border: 2px solid #fff;
-    color: #fff;
-    font-family: 'VT323', monospace;
-    font-size: 32px;
-    cursor: pointer;
-}
-
-#game-over button:hover,
-#win-screen button:hover {
-    background: #fff;
-    color: #000;
+    opacity: 0.8;
 }
 
 #jumpscare {
-    z-index: 2000;
-    /* Absolute top */
-    background-color: #000;
+    background: #000;
     justify-content: center;
     align-items: center;
-}
-
-#jumpscare.active {
-    display: flex;
-    animation: shake 0.1s infinite;
+    z-index: 3000;
 }
 
 #jumpscare-img {
-    font-size: 400px;
+    font-size: 500px;
 }
 
-@keyframes shake {
-    0% {
-        transform: translate(10px, 10px);
-    }
-
-    25% {
-        transform: translate(-10px, -10px);
-    }
-
-    50% {
-        transform: translate(10px, -10px);
-    }
-
-    75% {
-        transform: translate(-10px, 10px);
-    }
-
-    100% {
-        transform: translate(10px, 10px);
-    }
+#game-over,
+#win-screen {
+    z-index: 2500;
+    background: #000;
+    flex-direction: column;
 }
 
-.animatronic-emoji {
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+.power-out #room {
+    background: #000;
 }

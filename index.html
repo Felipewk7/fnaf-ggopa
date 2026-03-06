@@ -11,31 +11,30 @@
 
 <body>
     <div id="game-container">
+        <!-- Persistent HUD (Always on top) -->
+        <div id="hud">
+            <div class="hud-top-right">
+                <div id="time">12:00 AM</div>
+                <div id="nightdisplay">Noite 1</div>
+            </div>
+            <div class="hud-bottom-left">
+                <div id="energy-label">ENERGIA: <span id="energy-val">100</span>%</div>
+                <div id="usage-meter">USO: <span id="usage-bars">|</span></div>
+            </div>
+        </div>
+
         <!-- Main Menu -->
         <div id="main-menu" class="screen active">
             <h1 class="glitch" data-text="PROJECT NIGHTFALL">PROJECT NIGHTFALL</h1>
             <div id="menu-options">
-                <button id="btn-new-game">Nova Escuridão (Noite 1)</button>
-                <button id="btn-continue" disabled>Continuar (Noite <span id="save-night">1</span>)</button>
+                <button id="btn-new-game">NOVA ESCURIDÃO (Noite 1)</button>
+                <button id="btn-continue" disabled>CONTINUAR (Noite <span id="save-night">1</span>)</button>
             </div>
             <div class="warning">Cuidado: Contém luzes piscantes e sustos.</div>
         </div>
 
         <!-- Office View -->
         <div id="office" class="screen">
-            <!-- HUD -->
-            <div id="hud">
-                <div class="hud-top-right">
-                    <div id="time">12:00 AM</div>
-                    <div id="nightdisplay">Noite 1</div>
-                </div>
-                <div class="hud-bottom-left">
-                    <div id="energy-label">Energia: <span id="energy-val">100</span>%</div>
-                    <div id="usage-meter">Uso: <span id="usage-bars">|</span></div>
-                </div>
-            </div>
-
-            <!-- Environment -->
             <div id="room">
                 <!-- Left Door Area -->
                 <div class="door-area left">
@@ -43,13 +42,19 @@
                         <div id="door-left" class="door open"></div>
                     </div>
                     <div class="buttons-panel">
-                        <button id="btn-door-left" class="btn-door">PORTA</button>
-                        <button id="btn-light-left" class="btn-light">LUZ</button>
+                        <div class="btn-set">
+                            <div class="btn-label">PORTA</div>
+                            <button id="btn-door-left" class="btn-door"></button>
+                        </div>
+                        <div class="btn-set">
+                            <div class="btn-label">LUZ</div>
+                            <button id="btn-light-left" class="btn-light"></button>
+                        </div>
                     </div>
                     <div id="hallway-left" class="hallway"></div>
                 </div>
 
-                <!-- Desk/Center Area -->
+                <!-- Center Area -->
                 <div class="desk">
                     <div class="fan"></div>
                     <div id="poster" class="poster"></div>
@@ -62,15 +67,21 @@
                         <div id="door-right" class="door open"></div>
                     </div>
                     <div class="buttons-panel">
-                        <button id="btn-door-right" class="btn-door">PORTA</button>
-                        <button id="btn-light-right" class="btn-light">LUZ</button>
+                        <div class="btn-set">
+                            <div class="btn-label">PORTA</div>
+                            <button id="btn-door-right" class="btn-door"></button>
+                        </div>
+                        <div class="btn-set">
+                            <div class="btn-label">LUZ</div>
+                            <button id="btn-light-right" class="btn-light"></button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Monitor Toggle Button -->
-            <div id="monitor-toggle">
-                <div class="toggle-bar"></div>
+            <!-- Monitor Hover Trigger -->
+            <div id="monitor-toggle" class="monitor-trigger">
+                <div class="trigger-bar"></div>
             </div>
         </div>
 
@@ -79,47 +90,47 @@
             <div class="crt-overlay"></div>
             <div class="cam-feed">
                 <div id="static-overlay" class="static"></div>
-                <div id="cam-name">CAM 01 - Palco Principal</div>
+                <div id="cam-name">CAM 01 - PALCO PRINCIPAL</div>
                 <div id="cam-view">
-                    <!-- Animatronics container -->
                     <div id="animatronics-view"></div>
                 </div>
             </div>
 
-            <div id="map">
-                <button class="cam-btn active" data-cam="1" style="top: 55px; left: 135px;">CAM 1</button>
-                <button class="cam-btn" data-cam="2" style="top: 130px; left: 215px;">CAM 2</button>
-                <button class="cam-btn" data-cam="3" style="top: 170px; left: 55px;">CAM 3</button>
-                <button class="cam-btn" data-cam="4a" style="bottom: 90px; left: 80px;">CAM 4A</button>
-                <button class="cam-btn" data-cam="4b" style="bottom: 50px; left: 80px;">CAM 4B</button>
-                <button class="cam-btn" data-cam="5a" style="bottom: 90px; right: 80px;">CAM 5A</button>
-                <button class="cam-btn" data-cam="5b" style="bottom: 50px; right: 80px;">CAM 5B</button>
+            <div id="map-container">
+                <div id="map">
+                    <!-- Tech layout as SVG background in CSS, buttons here -->
+                    <button class="cam-btn active" data-cam="1" style="top: 20px; left: 100px;">1A</button>
+                    <button class="cam-btn" data-cam="2" style="top: 80px; left: 220px;">2</button>
+                    <button class="cam-btn" data-cam="3" style="top: 150px; left: 20px;">3</button>
+                    <button class="cam-btn" data-cam="4a" style="bottom: 80px; left: 60px;">4A</button>
+                    <button class="cam-btn" data-cam="4b" style="bottom: 40px; left: 60px;">4B</button>
+                    <button class="cam-btn" data-cam="5a" style="bottom: 80px; right: 60px;">5A</button>
+                    <button class="cam-btn" data-cam="5b" style="bottom: 40px; right: 60px;">5B</button>
+                </div>
+                <div class="map-label">MAPA DAS CÂMERAS</div>
             </div>
 
-            <!-- Monitor Toggle Button Bottom -->
-            <div id="monitor-toggle-down">
-                <div class="toggle-bar"></div>
+            <!-- Monitor Hover Back -->
+            <div id="monitor-toggle-down" class="monitor-trigger">
+                <div class="trigger-bar"></div>
             </div>
         </div>
 
-        <!-- Jumpscare Screen -->
+        <!-- Transitions & Endings -->
         <div id="jumpscare" class="screen">
             <div id="jumpscare-img"></div>
         </div>
 
-        <!-- Game Over Screen -->
         <div id="game-over" class="screen">
             <div class="static opacity-medium"></div>
             <h1>VOCÊ NÃO SOBREVIVEU</h1>
-            <p>O Fim.</p>
-            <button onclick="location.reload()">Tentar Novamente</button>
+            <button onclick="location.reload()">TENTAR NOVAMENTE</button>
         </div>
 
-        <!-- 6 AM Winner Screen -->
         <div id="win-screen" class="screen">
             <h1>06:00 AM</h1>
-            <p>Sobreviveu à noite.</p>
-            <button id="btn-next-night">Avançar</button>
+            <p>SOBREVIVEU À NOITE!</p>
+            <button id="btn-next-night">AVANÇAR</button>
         </div>
     </div>
 
