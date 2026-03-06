@@ -232,12 +232,28 @@ function toggleMonitor() {
 
     if (isMonitorOpen) {
         screens.cams.classList.add('active');
-        switchCamera(currentCam);
+        switchCamera(currentCam); // This will handle rendering
     } else {
         screens.cams.classList.remove('active');
         if (animatronics.Erro.pos === currentCam) triggerJumpscare('Erro');
     }
     updateUsage();
+}
+
+function switchCamera(id) {
+    currentCam = id;
+    document.querySelectorAll('.cam-btn').forEach(b => b.classList.toggle('active', b.dataset.cam === id));
+
+    // Static effect
+    const s = document.getElementById('static-overlay');
+    s.classList.add('heavy');
+    setTimeout(() => s.classList.remove('heavy'), 150);
+
+    const names = { '1': 'PALCO', '2': 'COZINHA', '3': 'COVA', '4a': 'CORREDOR ESQ', '4b': 'CANTO ESQ', '5a': 'CORREDOR DIR', '5b': 'CANTO DIR' };
+    const elCamName = document.getElementById('cam-name');
+    if (elCamName) elCamName.innerText = `CAM ${id.toUpperCase()} - ${names[id] || '???'}`;
+
+    renderCamView(id);
 }
 
 // --- AI BRAIN (REFACTORED FOR TICKS) ---
