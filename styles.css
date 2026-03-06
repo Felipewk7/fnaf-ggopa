@@ -29,7 +29,7 @@ body {
     width: 1024px;
     height: 768px;
     background-color: var(--bg-color);
-    box-shadow: 0 0 50px rgba(0,0,0,0.8);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
     overflow: hidden;
 }
 
@@ -48,12 +48,15 @@ body {
 
 /* MAIN MENU */
 #main-menu {
-    display: flex;
     flex-direction: column;
     align-items: flex-start;
     padding: 50px;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768"><rect width="100%" height="100%" fill="%23111"/><text x="512" y="384" font-size="200" fill="%23222" text-anchor="middle" dominant-baseline="middle">O</text></svg>') no-repeat center center;
     background-size: cover;
+}
+
+#main-menu.active {
+    display: flex;
 }
 
 #main-menu h1 {
@@ -122,7 +125,8 @@ body {
 /* OFFICE ENVIRONMENT */
 #room {
     position: absolute;
-    width: 120%; /* wider for panning if we wanted, but let's keep it simple for now */
+    width: 120%;
+    /* wider for panning if we wanted, but let's keep it simple for now */
     height: 100%;
     left: -10%;
     background: linear-gradient(to bottom, #1a1a1a 0%, #0d0d0d 100%);
@@ -148,21 +152,25 @@ body {
     overflow: hidden;
 }
 
-.left .door-frame { left: 80px; }
-.right .door-frame { right: 80px; }
+.left .door-frame {
+    left: 80px;
+}
+
+.right .door-frame {
+    right: 80px;
+}
 
 .door {
     width: 100%;
     height: 100%;
-    background: repeating-linear-gradient(
-      0deg,
-      #333,
-      #333 10px,
-      #222 10px,
-      #222 20px
-    );
+    background: repeating-linear-gradient(0deg,
+            #333,
+            #333 10px,
+            #222 10px,
+            #222 20px);
     position: absolute;
-    top: -100%; /* Open */
+    top: -100%;
+    /* Open */
     transition: top 0.3s ease-in-out;
 }
 
@@ -183,10 +191,16 @@ body {
     padding: 10px 0;
 }
 
-.left .buttons-panel { left: 10px; }
-.right .buttons-panel { right: 10px; }
+.left .buttons-panel {
+    left: 10px;
+}
 
-.btn-door, .btn-light {
+.right .buttons-panel {
+    right: 10px;
+}
+
+.btn-door,
+.btn-light {
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -194,12 +208,14 @@ body {
     cursor: pointer;
     font-size: 10px;
     font-weight: bold;
-    color: transparent; /* hide text, keep logical */
+    color: transparent;
+    /* hide text, keep logical */
 }
 
 .btn-door {
     background-color: #aa0000;
 }
+
 .btn-door.active {
     background-color: #ff3333;
     box-shadow: 0 0 10px #ff3333;
@@ -208,6 +224,7 @@ body {
 .btn-light {
     background-color: #aaaaaa;
 }
+
 .btn-light.active {
     background-color: #ffffff;
     box-shadow: 0 0 10px #ffffff;
@@ -227,8 +244,13 @@ body {
     font-size: 80px;
 }
 
-.left .hallway { left: 80px; }
-.right .hallway { right: 80px; }
+.left .hallway {
+    left: 80px;
+}
+
+.right .hallway {
+    right: 80px;
+}
 
 .hallway.lit {
     background-color: #2a2a2a;
@@ -248,7 +270,8 @@ body {
 }
 
 /* MONITOR TOGGLE */
-#monitor-toggle, #monitor-toggle-down {
+#monitor-toggle,
+#monitor-toggle-down {
     position: absolute;
     bottom: 20px;
     left: 50%;
@@ -265,13 +288,14 @@ body {
 .toggle-bar {
     width: 200px;
     height: 10px;
-    background-color: rgba(255,255,255,0.3);
+    background-color: rgba(255, 255, 255, 0.3);
     border-radius: 5px;
     transition: background-color 0.2s;
 }
 
-#monitor-toggle:hover .toggle-bar, #monitor-toggle-down:hover .toggle-bar {
-    background-color: rgba(255,255,255,0.8);
+#monitor-toggle:hover .toggle-bar,
+#monitor-toggle-down:hover .toggle-bar {
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 /* CAMERA SYSTEM */
@@ -300,8 +324,13 @@ body {
     z-index: 155;
 }
 
-.static.heavy { opacity: 0.8 !important; }
-.opacity-medium { opacity: 0.3 !important; }
+.static.heavy {
+    opacity: 0.8 !important;
+}
+
+.opacity-medium {
+    opacity: 0.3 !important;
+}
 
 #cam-name {
     position: absolute;
@@ -359,18 +388,24 @@ body {
 .power-out #room {
     background: #000;
 }
+
 .power-out .door.open {
     top: -100%;
 }
 
 /* SCREENS */
-#game-over, #win-screen {
-    display: flex;
+#game-over,
+#win-screen {
     flex-direction: column;
     justify-content: center;
     align-items: center;
     z-index: 300;
     background: #000;
+}
+
+#game-over.active,
+#win-screen.active {
+    display: flex;
 }
 
 #game-over h1 {
@@ -383,7 +418,8 @@ body {
     font-size: 120px;
 }
 
-#game-over button, #win-screen button {
+#game-over button,
+#win-screen button {
     margin-top: 50px;
     padding: 10px 20px;
     background: none;
@@ -393,7 +429,9 @@ body {
     font-size: 32px;
     cursor: pointer;
 }
-#game-over button:hover, #win-screen button:hover {
+
+#game-over button:hover,
+#win-screen button:hover {
     background: #fff;
     color: #000;
 }
@@ -416,13 +454,27 @@ body {
 }
 
 @keyframes shake {
-    0% { transform: translate(10px, 10px); }
-    25% { transform: translate(-10px, -10px); }
-    50% { transform: translate(10px, -10px); }
-    75% { transform: translate(-10px, 10px); }
-    100% { transform: translate(10px, 10px); }
+    0% {
+        transform: translate(10px, 10px);
+    }
+
+    25% {
+        transform: translate(-10px, -10px);
+    }
+
+    50% {
+        transform: translate(10px, -10px);
+    }
+
+    75% {
+        transform: translate(-10px, 10px);
+    }
+
+    100% {
+        transform: translate(10px, 10px);
+    }
 }
 
 .animatronic-emoji {
-    filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
 }
