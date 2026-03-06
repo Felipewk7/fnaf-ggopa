@@ -39,11 +39,39 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    display: none;
+    display: none !important;
 }
 
 .screen.active {
-    display: block;
+    display: block !important;
+}
+
+/* Explicit specificity for ID-based screens */
+#main-menu,
+#office,
+#camera-system,
+#jumpscare,
+#game-over,
+#win-screen {
+    display: none !important;
+}
+
+#main-menu.active {
+    display: flex !important;
+}
+
+#office.active {
+    display: block !important;
+}
+
+#camera-system.active {
+    display: block !important;
+}
+
+#game-over.active,
+#win-screen.active,
+#jumpscare.active {
+    display: flex !important;
 }
 
 /* MAIN MENU */
@@ -53,10 +81,8 @@ body {
     padding: 50px;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768"><rect width="100%" height="100%" fill="%23111"/><text x="512" y="384" font-size="200" fill="%23222" text-anchor="middle" dominant-baseline="middle">O</text></svg>') no-repeat center center;
     background-size: cover;
-}
-
-#main-menu.active {
-    display: flex;
+    z-index: 500;
+    /* Highest priority for menu */
 }
 
 #main-menu h1 {
@@ -399,13 +425,9 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 300;
+    z-index: 1000;
+    /* Higher than office and cams */
     background: #000;
-}
-
-#game-over.active,
-#win-screen.active {
-    display: flex;
 }
 
 #game-over h1 {
@@ -437,9 +459,9 @@ body {
 }
 
 #jumpscare {
-    z-index: 400;
+    z-index: 2000;
+    /* Absolute top */
     background-color: #000;
-    display: none;
     justify-content: center;
     align-items: center;
 }

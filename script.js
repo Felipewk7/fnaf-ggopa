@@ -1,5 +1,5 @@
 // --- GAME STATE ---
-const GAME_HOUR_MS = 60000; // 1 hour = 60s for faster testing/play
+const GAME_HOUR_MS = 90000; // 1 hour = 90s (from GDO)
 const MAX_ENERGY = 100;
 
 let currentNight = 1;
@@ -91,6 +91,12 @@ function init() {
     document.querySelectorAll('.cam-btn').forEach(btn => {
         btn.addEventListener('click', (e) => switchCamera(e.target.dataset.cam));
     });
+
+    // Ensure clean start
+    elOffice.classList.remove('active');
+    elWinScreen.classList.remove('active');
+    elGameOver.classList.remove('active');
+    elMainMenu.classList.add('active');
 }
 
 function loadProgress() {
@@ -114,44 +120,56 @@ function saveProgress(night) {
 function startGame(night) {
     currentNight = night;
     resetState();
-    
+
     elMainMenu.classList.remove('active');
     elOffice.classList.add('active');
-    
+
     elNightDisplay.innerText = `Noite ${currentNight}`;
-    
+
     gameLoopInterval = setInterval(updateTime, GAME_HOUR_MS);
     energyLoopInterval = setInterval(updateEnergy, 1000); // 1 tick per sec
-    aiLoopInterval = setInterval(updateAI, 4000); // AI tick every 4s
+    aiLoopInterval = setInterval(updateAI, 5000); // AI tick every 5s
 }
 
 function resetState() {
+    // Clear any existing intervals
+    if (gameLoopInterval) clearInterval(gameLoopInterval);
+    if (aiLoopInterval) clearInterval(aiLoopInterval);
+    if (energyLoopInterval) clearInterval(energyLoopInterval);
+
     timeHour = 0;
     energy = MAX_ENERGY;
     powerOut = false;
     isMonitorOpen = false;
     currentCam = '1';
-    
+
     elTime.innerText = '12:00 AM';
     elEnergyVal.innerText = energy;
-    
+
     isLeftDoorClosed = false;
     isRightDoorClosed = false;
     isLeftLightOn = false;
     isRightLightOn = false;
-    
+
+    // Cleanup DOM classes
+    elOffice.classList.remove('active');
+    elCamSystem.classList.remove('active');
+    elGameOver.classList.remove('active');
+    elWinScreen.classList.remove('active');
+    elJumpscare.classList.remove('active');
+
     elLeftDoor.classList.remove('closed');
     elRightDoor.classList.remove('closed');
     elHallwayLeft.classList.remove('lit');
     elHallwayRight.classList.remove('lit');
-    
+
     elBtnDoorLeft.classList.remove('active');
     elBtnDoorRight.classList.remove('active');
     elBtnLightLeft.classList.remove('active');
     elBtnLightRight.classList.remove('active');
-    
+
     document.body.classList.remove('power-out');
-    
+
     // Reset AI
     animatronics['Coelho'].pos = '1';
     animatronics['Ave'].pos = '1';
@@ -175,11 +193,11 @@ function updateTime() {
 
 function updateEnergy() {
     if (powerOut) return;
-    
+
     let drainRate = usage; // 1 to 5
     if (currentNight >= 4) drainRate += 0.5; // harder drain
-    
-    energy -= (drainRate * 0.1); 
+
+    energy -= (drainRate * 0.1);
     if (energy <= 0) {
         energy = 0;
         triggerPowerOut();
@@ -194,9 +212,9 @@ function updateUsage() {
     if (isLeftLightOn) usage++;
     if (isRightLightOn) usage++;
     if (isMonitorOpen) usage++;
-    
+
     let bars = '|';
-    for(let i=1; i<usage; i++) bars += '|';
+    for (let i = 1; i < usage; i++) bars += '|';
     elUsageBars.innerText = bars;
 }
 
@@ -221,12 +239,12 @@ function toggleLight(side) {
         isLeftLightOn = !isLeftLightOn;
         elHallwayLeft.classList.toggle('lit', isLeftLightOn);
         elBtnLightLeft.classList.toggle('active', isLeftLightOn);
-        if(isLeftLightOn) checkDoorAnimatronic('left');
+        if (isLeftLightOn) checkDoorAnimatronic('left');
     } else {
         isRightLightOn = !isRightLightOn;
         elHallwayRight.classList.toggle('lit', isRightLightOn);
         elBtnLightRight.classList.toggle('active', isRightLightOn);
-        if(isRightLightOn) checkDoorAnimatronic('right');
+        if (isRightLightOn) checkDoorAnimatronic('right');
     }
     updateUsage();
 }
@@ -234,13 +252,13 @@ function toggleLight(side) {
 function toggleMonitor() {
     if (powerOut) return;
     isMonitorOpen = !isMonitorOpen;
-    
+
     if (isMonitorOpen) {
         elCamSystem.classList.add('active');
         renderCamera(currentCam);
     } else {
         elCamSystem.classList.remove('active');
-        
+
         // Random chance for "O Erro" to crash the game if he was on the monitor
         if (animatronics['Erro'].pos === currentCam) {
             triggerJumpscare('Erro');
@@ -251,22 +269,22 @@ function toggleMonitor() {
 
 function switchCamera(camId) {
     if (!isMonitorOpen || powerOut) return;
-    
+
     // static effect
     elStatic.classList.add('heavy');
     setTimeout(() => elStatic.classList.remove('heavy'), 200);
 
     document.querySelectorAll('.cam-btn').forEach(b => b.classList.remove('active'));
     document.querySelector(`.cam-btn[data-cam="${camId}"]`).classList.add('active');
-    
+
     currentCam = camId;
-    
+
     let names = {
         '1': 'Palco Principal', '2': 'Cozinha (Apenas áudio)', '3': 'Cova do Pirata',
         '4a': 'Corredor Esquerdo', '4b': 'Canto Esquerdo', '5a': 'Corredor Direito', '5b': 'Canto Direito'
     };
     elCamName.innerText = `CAM ${camId.toUpperCase()} - ${names[camId]}`;
-    
+
     renderCamera(camId);
 }
 
@@ -277,7 +295,7 @@ function updateAI() {
         let aiLvl = animatronics['Observador'].aiInfo[currentNight];
         let rand = Math.floor(Math.random() * 20) + 1;
         if (rand <= (aiLvl > 0 ? aiLvl : 5)) {
-             triggerJumpscare('Observador');
+            triggerJumpscare('Observador');
         }
         return;
     }
@@ -288,9 +306,9 @@ function updateAI() {
     moveFoxy();
     moveFreddy();
     moveGolden();
-    
+
     if (isMonitorOpen) renderCamera(currentCam);
-    
+
     // Resolve Attacks
     checkAttacks();
 }
@@ -299,7 +317,7 @@ function moveStandardAI(name) {
     let anim = animatronics[name];
     let aiLvl = anim.aiInfo[currentNight];
     if (aiLvl === 0) return;
-    
+
     let rand = Math.floor(Math.random() * 20) + 1;
     if (rand <= aiLvl) {
         // Move forward
@@ -312,10 +330,10 @@ function moveStandardAI(name) {
                 anim.pos = anim.route[currIdx + 1];
             }
         } else if (anim.pos === 'office') {
-             // Already in office
+            // Already in office
         } else {
-             // reset
-             anim.pos = '1';
+            // reset
+            anim.pos = '1';
         }
     }
 }
@@ -324,26 +342,26 @@ function moveFoxy() {
     let anim = animatronics['Corredor'];
     let aiLvl = anim.aiInfo[currentNight];
     if (aiLvl === 0) return;
-    
+
     if (isMonitorOpen && currentCam === '3') return; // Camera stall
-    
+
     let rand = Math.floor(Math.random() * 20) + 1;
     if (rand <= aiLvl) {
         if (anim.state < 3) {
             anim.state++;
         } else if (anim.state === 3) {
-             anim.pos = '4a'; // running down left hall
-             setTimeout(() => {
-                 if (isLeftDoorClosed) {
-                     // blocked
-                     anim.state = 0;
-                     anim.pos = '3';
-                     energy -= 5; // knock drain
-                     if (energy < 0) energy = 0;
-                 } else {
-                     anim.pos = 'office';
-                 }
-             }, 3000); // 3 seconds to close door
+            anim.pos = '4a'; // running down left hall
+            setTimeout(() => {
+                if (isLeftDoorClosed) {
+                    // blocked
+                    anim.state = 0;
+                    anim.pos = '3';
+                    energy -= 5; // knock drain
+                    if (energy < 0) energy = 0;
+                } else {
+                    anim.pos = 'office';
+                }
+            }, 3000); // 3 seconds to close door
         }
     }
 }
@@ -352,16 +370,16 @@ function moveFreddy() {
     let anim = animatronics['Observador'];
     let aiLvl = anim.aiInfo[currentNight];
     if (aiLvl === 0) return;
-    
+
     if (isMonitorOpen) return; // Stalled by monitor being up at all (simplified mechanic)
-    
+
     let rand = Math.floor(Math.random() * 20) + 1;
     if (rand <= aiLvl) {
         let currIdx = anim.route.indexOf(anim.pos);
         if (currIdx < anim.route.length - 1) {
-             anim.pos = anim.route[currIdx + 1];
+            anim.pos = anim.route[currIdx + 1];
         } else {
-             anim.pos = 'office';
+            anim.pos = 'office';
         }
     }
 }
@@ -370,7 +388,7 @@ function moveGolden() {
     let anim = animatronics['Erro'];
     let aiLvl = anim.aiInfo[currentNight];
     if (aiLvl === 0) return;
-    
+
     if (isMonitorOpen) {
         let rand = Math.floor(Math.random() * 100);
         if (rand < aiLvl && currentCam === '2') { // appears randomly on cam 2
@@ -385,14 +403,14 @@ function checkAttacks() {
     // Coelho (Left)
     if (animatronics['Coelho'].pos === 'office') {
         if (!isMonitorOpen) {
-             if (isLeftDoorClosed) {
-                 animatronics['Coelho'].pos = '1'; // reset
-             } else {
-                 triggerJumpscare('Coelho');
-             }
+            if (isLeftDoorClosed) {
+                animatronics['Coelho'].pos = '1'; // reset
+            } else {
+                triggerJumpscare('Coelho');
+            }
         }
     }
-    
+
     // Ave (Right)
     if (animatronics['Ave'].pos === 'office') {
         if (!isMonitorOpen) {
@@ -403,21 +421,21 @@ function checkAttacks() {
             }
         }
     }
-    
+
     // Foxy check done in timeout
     if (animatronics['Corredor'].pos === 'office') {
-         triggerJumpscare('Corredor');
+        triggerJumpscare('Corredor');
     }
-    
+
     // Freddy
     if (animatronics['Observador'].pos === 'office' && !isMonitorOpen && !isRightDoorClosed) {
-         triggerJumpscare('Observador');
+        triggerJumpscare('Observador');
     }
 
     // Update Hallway views if light is on
     if (isLeftLightOn) checkDoorAnimatronic('left');
     else elHallwayLeft.innerText = '';
-    
+
     if (isRightLightOn) checkDoorAnimatronic('right');
     else elHallwayRight.innerText = '';
 }
@@ -435,30 +453,30 @@ function checkDoorAnimatronic(side) {
 // --- RENDERING ---
 function renderCamera(camId) {
     if (camId === '2') {
-         // Kitchen - Dark, audio only usually, but let's just make it static
-         elAnimatronicsView.innerHTML = '<span style="font-size: 20px; color: #fff;">- SINAL DE VÍDEO PERDIDO -<br>Apenas Áudio</span>';
-         
-         if (animatronics['Erro'].pos === '2') {
-             elAnimatronicsView.innerHTML += `<span class="animatronic-emoji" style="position:absolute">${animatronics['Erro'].emoji}</span>`;
-         }
-         return;
+        // Kitchen - Dark, audio only usually, but let's just make it static
+        elAnimatronicsView.innerHTML = '<span style="font-size: 20px; color: #fff;">- SINAL DE VÍDEO PERDIDO -<br>Apenas Áudio</span>';
+
+        if (animatronics['Erro'].pos === '2') {
+            elAnimatronicsView.innerHTML += `<span class="animatronic-emoji" style="position:absolute">${animatronics['Erro'].emoji}</span>`;
+        }
+        return;
     }
-    
+
     let contents = '';
-    
+
     if (camId === '3') {
         let f = animatronics['Corredor'].state;
         let visual = f === 0 ? '🏕️' : (f === 1 ? '🏕️🦊' : (f === 2 ? '🦊' : ''));
         contents += `<span class="animatronic-emoji">${visual}</span>`;
     }
-    
+
     for (const [name, data] of Object.entries(animatronics)) {
         if (data.pos === camId && name !== 'Corredor' && name !== 'Erro') {
-             // Don't show Freddy easily unless camera is static/flashing, but keep simple for now
-             contents += `<span class="animatronic-emoji">${data.emoji}</span>`;
+            // Don't show Freddy easily unless camera is static/flashing, but keep simple for now
+            contents += `<span class="animatronic-emoji">${data.emoji}</span>`;
         }
     }
-    
+
     elAnimatronicsView.innerHTML = contents;
 }
 
@@ -471,14 +489,14 @@ function clearHallways() {
 function triggerPowerOut() {
     powerOut = true;
     document.body.classList.add('power-out');
-    
+
     if (isMonitorOpen) toggleMonitor();
-    
+
     isLeftDoorClosed = false;
     isRightDoorClosed = false;
     isLeftLightOn = false;
     isRightLightOn = false;
-    
+
     elLeftDoor.classList.remove('closed');
     elRightDoor.classList.remove('closed');
     elBtnDoorLeft.classList.remove('active');
@@ -495,18 +513,18 @@ function triggerJumpscare(animatronicName) {
     clearInterval(gameLoopInterval);
     clearInterval(energyLoopInterval);
     clearInterval(aiLoopInterval);
-    
+
     elJumpscare.classList.add('active');
-    
+
     // Quick flashy effect
     let toggle = true;
     let flash = setInterval(() => {
         elJumpscare.style.backgroundColor = toggle ? '#fff' : '#000';
         toggle = !toggle;
     }, 50);
-    
+
     document.getElementById('jumpscare-img').innerText = animatronics[animatronicName].emoji;
-    
+
     setTimeout(() => {
         clearInterval(flash);
         elJumpscare.classList.remove('active');
@@ -519,10 +537,10 @@ function winGame() {
     clearInterval(gameLoopInterval);
     clearInterval(energyLoopInterval);
     clearInterval(aiLoopInterval);
-    
+
     elOffice.classList.remove('active');
     elWinScreen.classList.add('active');
-    
+
     let toggle = true;
     let flash = setInterval(() => {
         if (elWinScreen.classList.contains('active')) {
@@ -532,7 +550,7 @@ function winGame() {
             clearInterval(flash);
         }
     }, 500);
-    
+
     saveProgress(currentNight + 1);
 }
 
