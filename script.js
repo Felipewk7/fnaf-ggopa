@@ -46,7 +46,7 @@ const hud = {
     usage: document.getElementById('usage-bars')
 };
 
-// --- CORE LOGIC ---
+// --- INIT ---
 function init() {
     loadProgress();
 
@@ -55,13 +55,17 @@ function init() {
     document.getElementById('btn-continue').onclick = () => startGame(currentNight);
     document.getElementById('btn-next-night').onclick = () => startGame(currentNight);
 
+    // Retry Button Corrected
+    const retryBtn = document.getElementById('btn-retry');
+    if (retryBtn) retryBtn.onclick = () => window.location.reload();
+
     // Controls
     document.getElementById('btn-door-left').onclick = (e) => { e.stopPropagation(); toggleDoor('left'); };
     document.getElementById('btn-light-left').onclick = (e) => { e.stopPropagation(); toggleLight('left'); };
     document.getElementById('btn-door-right').onclick = (e) => { e.stopPropagation(); toggleDoor('right'); };
     document.getElementById('btn-light-right').onclick = (e) => { e.stopPropagation(); toggleLight('right'); };
 
-    // Tablet Hover (Shared)
+    // Tablet Hover (Shared at bottom)
     document.getElementById('monitor-toggle').onmouseenter = () => { if (!isMonitorOpen) toggleMonitor(); };
     document.getElementById('monitor-toggle-down').onmouseenter = () => { if (isMonitorOpen) toggleMonitor(); };
 
@@ -71,13 +75,12 @@ function init() {
         const panner = document.getElementById('office-panner');
         const containerWidth = 1024;
         const pannerWidth = 1600;
-        const mouseX = e.clientX - screens.office.getBoundingClientRect().left;
+        const rect = screens.office.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
         const percent = mouseX / containerWidth;
         const targetLeft = -(pannerWidth - containerWidth) * percent;
         panner.style.left = targetLeft + 'px';
     };
-
-    // Cams
     document.querySelectorAll('.cam-btn').forEach(btn => {
         btn.onclick = () => switchCamera(btn.dataset.cam);
     });
@@ -241,7 +244,11 @@ function updateAI() {
     moveFoxy();
     moveFreddy();
 
+    // Update visuals
     if (isMonitorOpen) renderCamView(currentCam);
+    renderDoorVisual('left');
+    renderDoorVisual('right');
+
     checkAttacks();
 }
 

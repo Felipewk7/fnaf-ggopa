@@ -265,18 +265,22 @@ body {
     width: 180px;
     height: 480px;
     background: #000;
-    z-index: -1;
+    z-index: 5;
+    /* Higher than panner background */
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 100px;
-    filter: brightness(0);
-    transition: filter 0.1s;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.1s;
+    pointer-events: none;
 }
 
 .hallway.lit {
-    filter: brightness(1);
-    background: #1a1a1a;
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.05);
+    /* Very slight tint */
 }
 
 /* MONITOR TRIGGER (HOVER) */
@@ -286,25 +290,21 @@ body {
     transform: translateX(-50%);
     width: 600px;
     height: 80px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
     z-index: 2200;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: background 0.3s;
-}
-
-#monitor-toggle {
     bottom: 0;
+    /* Both at bottom now */
 }
 
-#monitor-toggle-down {
-    top: 0;
-}
+/* CSS Cleaned */
 
 .monitor-trigger:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .trigger-bar {
@@ -463,29 +463,48 @@ body {
 #win-screen {
     z-index: 2500;
     background: #000;
-    flex-direction: column;
     display: none !important;
 }
 
 #game-over.active,
 #win-screen.active {
     display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.end-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 #game-over h1 {
-    font-size: 70px;
+    font-size: 80px;
     color: var(--red-alert);
+    margin-bottom: 40px;
+    text-shadow: 0 0 20px #f00;
 }
 
-#game-over button {
-    margin-top: 30px;
-    padding: 15px 30px;
-    background: #300;
-    border: 3px solid #f00;
+#game-over button,
+#win-screen button {
+    padding: 20px 40px;
+    background: #200;
+    border: 4px solid #f00;
     color: #fff;
     cursor: pointer;
-    font-size: 24px;
-    font-family: inherit;
+    font-size: 32px;
+    font-family: 'VT323', monospace;
+    pointer-events: auto !important;
+    transition: all 0.2s;
+}
+
+#game-over button:hover {
+    background: #f00;
+    color: #000;
+    transform: scale(1.1);
 }
 
 .power-out #room {

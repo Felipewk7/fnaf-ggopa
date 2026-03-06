@@ -111,8 +111,8 @@
                 <div class="map-label">MAPA DAS CÂMERAS</div>
             </div>
 
-            <!-- Monitor Hover Back (Same place as open) -->
-            <div id="monitor-toggle-down" class="monitor-trigger">
+            <!-- Monitor Hover Back (Same place as open - bottom) -->
+            <div id="monitor-toggle-down" class="monitor-trigger monitor-trigger-bottom">
                 <div class="trigger-bar"></div>
             </div>
         </div>
@@ -124,8 +124,10 @@
 
         <div id="game-over" class="screen">
             <div class="static opacity-medium"></div>
-            <h1>VOCÊ NÃO SOBREVIVEU</h1>
-            <button onclick="location.reload()">TENTAR NOVAMENTE</button>
+            <div class="end-content">
+                <h1>VOCÊ NÃO SOBREVIVEU</h1>
+                <button id="btn-retry">TENTAR NOVAMENTE</button>
+            </div>
         </div>
 
         <div id="win-screen" class="screen">
