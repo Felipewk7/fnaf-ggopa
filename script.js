@@ -1,5 +1,5 @@
 // --- GAME CONSTANTS ---
-const GAME_HOUR_MS = 50001; // 50s per hour (5 min total)
+const GAME_HOUR_MS = 10001; // 50s per hour (5 min total)
 const MAX_ENERGY = 100;
 
 // --- STATE VARIABLES ---
@@ -23,11 +23,13 @@ let aiTick = null;
 // Animatronics Config
 const animatronics = {
     // Níveis de IA para [Noite 1, 2, 3, 4, 5, Custom(6)]
-    "Coelho": { name: "O Coelho", emoji: '🐰', pos: '1', ai: [0, 1, 3, 6, 12, 18], route: ['1', '8', '6', '4a', '4b', 'office'] },
-    "Ave": { name: "A Ave", emoji: '🐥', pos: '1', ai: [0, 1, 2, 5, 10, 15], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
-    "Corredor": { name: "O Corredor", emoji: '🦊', pos: '3', ai: [0, 0, 1, 3, 6, 10], state: 0 },
-    "Observador": { name: "O Observador", emoji: '🐻', pos: '1', ai: [0, 0, 0, 2, 5, 10], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
-    "Erro": { name: "O Erro", emoji: '🦞', pos: 'hidden', ai: [0, 0, 0, 0, 1, 3] }
+    // --- ONDE ALTERAR AS IMAGENS ---
+    // Substitua os caminhos abaixo pelos nomes dos seus arquivos de imagem na pasta assets/images/
+    "Coelho": { name: "O Coelho", img: './assets/images/coelho.png', emoji: '🐰', pos: '1', ai: [0, 1, 3, 6, 12, 18], route: ['1', '8', '6', '4a', '4b', 'office'] },
+    "Ave": { name: "A Ave", img: './assets/images/ave.png', emoji: '🐥', pos: '1', ai: [0, 1, 2, 5, 10, 15], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
+    "Corredor": { name: "O Corredor", img: './assets/images/corredor.png', emoji: '🦊', pos: '3', ai: [0, 0, 1, 3, 6, 10], state: 0 },
+    "Observador": { name: "O Observador", img: './assets/images/observador.png', emoji: '🐻', pos: '1', ai: [0, 0, 0, 2, 5, 10], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
+    "Erro": { name: "O Erro", img: './assets/images/lagosta.png', emoji: '🦞', pos: 'hidden', ai: [0, 0, 0, 0, 1, 3] }
 };
 
 let attackInNextTick = { Coelho: false, Ave: false, Observador: false };
@@ -63,6 +65,7 @@ const soundFiles = {
     monitor: 'monitor.mp3.mp3',
     powerout: 'powerout.mp3.mp3',
     jumpscare: 'jumpscare.mp3.mp3',
+    jumpscare_lagosta: 'jumpscare_lagosta.mp3', // --- ONDE COLOCAR O SOM DA LAGOSTA ---
     blip: 'blip.mp3.mp3',
     freddy_music: 'freddy.mp3.mp3',
     victory: 'victory.mp3.mp3'
@@ -533,16 +536,18 @@ function renderCamView(id) {
         stopSound('kitchen'); // Para o som se mudar de câmera
         if (id === '3') {
             let s = animatronics.Corredor.state;
-            let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:100px; position:absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); z-index:60;">🦊</span>' : (s === 2 ? '<span style="font-size:150px; position:absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); z-index:60;">🦊</span>' : '<span style="font-size:180px; position:absolute; left: 50%; top: 70%; transform: translate(-50%, -50%); z-index:60;">🦊</span>'));
+            let foxy = s === 0 ? '' : `<img src="${animatronics.Corredor.img}" style="height:${s === 1 ? '100px' : (s === 2 ? '200px' : '300px')}; position:absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); z-index:60;">`;
             html = `<div class="cove-scene-wrapper state-${s}" style="position:absolute; width:100%; height:100%; z-index:10;">${roomScenes[id] || ''}</div>`;
             html = `<div style="z-index:70; position:absolute; width:100%; height:100%; pointer-events:none;">${foxy}</div>` + html;
         } else {
             let anims = '';
             for (let k in animatronics) {
-                if (animatronics[k].pos === id && k !== 'Corredor') anims += animatronics[k].emoji;
+                if (animatronics[k].pos === id && k !== 'Corredor') {
+                    anims += `<img src="${animatronics[k].img}" style="height: 250px; margin: 0 10px;">`;
+                }
             }
             if (anims) {
-                html = `<div style="z-index:10; position:absolute; top: 70%; left: 50%; transform: translate(-50%, -50%); font-size:150px; width:100%; text-align:center; pointer-events:none;">${anims}</div>` + html;
+                html = `<div style="z-index:10; position:absolute; top: 70%; left: 50%; transform: translate(-50%, -50%); display:flex; justify-content:center; align-items:center; width:100%; pointer-events:none;">${anims}</div>` + html;
             }
         }
     }
@@ -552,14 +557,14 @@ function renderCamView(id) {
 function renderDoorVisual(side) {
     const el = document.getElementById(side === 'left' ? 'hallway-left' : 'hallway-right');
     const isLit = side === 'left' ? isLeftLightOn : isRightLightOn;
-    let found = '';
+    let foundImg = '';
     if (isLit) {
-        if (side === 'left' && animatronics.Coelho.pos === '4b') found = animatronics.Coelho.emoji;
+        if (side === 'left' && animatronics.Coelho.pos === '4b') foundImg = animatronics.Coelho.img;
         if (side === 'right' && (animatronics.Ave.pos === '5b' || animatronics.Observador.pos === '5b')) {
-            found = animatronics.Ave.pos === '5b' ? animatronics.Ave.emoji : animatronics.Observador.emoji;
+            foundImg = animatronics.Ave.pos === '5b' ? animatronics.Ave.img : animatronics.Observador.img;
         }
     }
-    el.innerText = found;
+    el.innerHTML = foundImg ? `<img src="${foundImg}" style="height: 350px;">` : '';
 }
 
 function triggerPowerOut() {
@@ -604,12 +609,10 @@ function triggerPowerOut() {
                 let freddyFlash = setInterval(() => {
                     if (!powerOut || screens.menu.classList.contains('active')) {
                         clearInterval(freddyFlash);
-                        leftDoor.innerText = '';
-                        leftDoor.style.color = "";
-                        leftDoor.style.textShadow = "";
+                        leftDoor.innerHTML = '';
                         return;
                     }
-                    leftDoor.innerText = leftDoor.innerText === '🐻' ? '' : '🐻';
+                    leftDoor.innerHTML = leftDoor.innerHTML === '' ? `<img src="${animatronics.Observador.img}" style="height: 350px; filter: brightness(0) invert(1) drop-shadow(0 0 20px white);">` : '';
                 }, 600);
             }
         }
@@ -627,9 +630,13 @@ function triggerPowerOut() {
 function triggerJumpscare(key) {
     if (gameTick) clearInterval(gameTick); if (energyTick) clearInterval(energyTick); if (aiTick) clearInterval(aiTick);
     stopAllSounds();
-    playSound('jumpscare');
+
+    // Escolhe o som do jumpscare (se for Erro/Lagosta, usa o som diferente)
+    const soundKey = (key === 'Erro') ? 'jumpscare_lagosta' : 'jumpscare';
+    playSound(soundKey);
+
     showScreen('jumpscare');
-    document.getElementById('jumpscare-img').innerText = animatronics[key].emoji;
+    document.getElementById('jumpscare-img').innerHTML = `<img src="${animatronics[key].img}" style="width: 80%; transform: scale(1.5);">`;
     setTimeout(() => { showScreen('gameover'); }, 2000);
 }
 
