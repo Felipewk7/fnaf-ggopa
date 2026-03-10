@@ -198,23 +198,28 @@ function init() {
     showScreen('menu');
 
     // SOLUÇÃO PARA O BLOQUEIO DE ÁUDIO DO NAVEGADOR (AUTO-PLAY)
-    document.addEventListener('mousedown', function unlock() {
-        console.log("Desbloqueando áudios via interação...");
-        for (let s in sounds) {
-            let a = sounds[s];
-            a.play().then(() => {
-                a.pause();
-                a.currentTime = 0;
-            }).catch(e => { });
-        }
+    const unlockOverlay = document.getElementById('audio-unlock-overlay');
+    if (unlockOverlay) {
+        unlockOverlay.onclick = () => {
+            console.log("Desbloqueando áudios via interação...");
+            for (let s in sounds) {
+                let a = sounds[s];
+                a.play().then(() => {
+                    a.pause();
+                    a.currentTime = 0;
+                }).catch(e => { });
+            }
 
-        // Pequeno delay para garantir o desbloqueio
-        setTimeout(() => {
-            if (sounds.menu.paused) playSound('menu', true, 0.4);
-        }, 300);
+            // Inicia a música do menu após o desbloqueio
+            setTimeout(() => {
+                if (sounds.menu.paused) playSound('menu', true, 0.4);
+            }, 300);
 
-        document.removeEventListener('mousedown', unlock);
-    }, { once: true });
+            // Remove o overlay com um leve fade-out
+            unlockOverlay.style.opacity = '0';
+            setTimeout(() => unlockOverlay.remove(), 500);
+        };
+    }
 }
 
 function startGame(night) {

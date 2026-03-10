@@ -13,6 +13,43 @@
     user-select: none;
 }
 
+#audio-unlock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+    /* Topo absoluto */
+    cursor: pointer;
+    transition: opacity 0.5s ease;
+}
+
+.unlock-prompt {
+    font-size: 40px;
+    color: #fff;
+    letter-spacing: 5px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.3;
+    }
+}
+
 body {
     background-color: #000;
     color: var(--text-main);
