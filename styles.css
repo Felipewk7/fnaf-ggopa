@@ -233,32 +233,42 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 5;
+    /* Abaixo do HUD (2100) e Câmeras (150 - que vou aumentar) */
+}
+
+.desk {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 .desk-surface {
     position: absolute;
-    bottom: 50px;
+    bottom: -100px;
+    /* Escondido parcialmente na base */
     left: 50%;
     transform: translateX(-50%);
-    width: 600px;
-    height: 150px;
-    background: #2a2a2a;
-    border: 4px solid #444;
-    border-radius: 10px 10px 0 0;
-    box-shadow: 0 5px 15px #000;
-    z-index: 500;
+    width: 1200px;
+    height: 350px;
+    background: linear-gradient(to bottom, #1a1a1a, #050505);
+    border-top: 8px solid #222;
+    border-radius: 50% 50% 0 0;
+    box-shadow: 0 -20px 100px #000;
+    z-index: 4;
 }
 
 .poster-clean {
-    top: 50px;
+    top: 60px;
     left: 50%;
     transform: translateX(-50%);
     width: 180px;
-    height: 220px;
-    background: #151515;
-    border: 5px solid #333;
-    z-index: 100;
+    height: 240px;
+    background: #0a0a0a;
+    border: 10px solid #1a1a1a;
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.8);
+    z-index: 2;
 }
 
 .poster-text {
@@ -270,52 +280,53 @@ body {
 }
 
 .monitor-base {
-    bottom: 150px;
-    left: 35%;
-    width: 140px;
-    height: 110px;
+    bottom: 50px;
+    left: 25%;
+    width: 150px;
+    height: 120px;
     background: #111;
-    border: 3px solid #333;
-    z-index: 600;
+    border: 5px solid #000;
+    z-index: 10;
 }
 
 .monitor-screen {
     width: 90%;
     height: 85%;
-    background: #050505;
-    border: 1px solid #222;
+    background: #000;
+    border-radius: 2px;
     position: relative;
     overflow: hidden;
+    box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.2);
 }
 
 .monitor-glow {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(0, 255, 0, 0.05) 0%, transparent 80%);
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.1) 0%, transparent 70%);
 }
 
 .fan-clean {
     bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
+    z-index: 15;
 }
 
 .fan-base {
     position: absolute;
-    bottom: -45px;
-    width: 45px;
-    height: 50px;
-    background: #1a1a1a;
-    border-radius: 8px 8px 2px 2px;
-    border: 2px solid #333;
+    bottom: -50px;
+    width: 50px;
+    height: 60px;
+    background: #151515;
+    border: 3px solid #333;
 }
 
 .fan-head {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     position: relative;
     display: flex;
     justify-content: center;
@@ -326,24 +337,25 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 4px dashed #333;
+    border: 5px dashed #444;
     animation: spin 0.1s linear infinite;
 }
 
 .fan-center {
     position: absolute;
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
     background: #444;
     border-radius: 50%;
-    border: 2px solid #222;
+    border: 3px solid #222;
 }
 
 .phone-props {
-    bottom: 50px;
-    right: 25%;
+    bottom: 80px;
+    right: 20%;
     width: 90px;
     height: 70px;
+    z-index: 15;
 }
 
 .phone-body {
@@ -365,10 +377,11 @@ body {
 }
 
 .desk-clutter {
-    bottom: 30px;
-    left: 18%;
+    bottom: 60px;
+    left: 15%;
     flex-direction: row !important;
     gap: 15px;
+    z-index: 15;
 }
 
 .paper-stack {
@@ -567,11 +580,11 @@ body {
 /* CAMERA SYSTEM */
 #camera-system {
     background-color: #000;
-    z-index: 150;
+    z-index: 2200;
+    /* Acima do HUD (2100) para cobrir tudo quando aberto */
     transform: translateY(100%);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: block !important;
-    /* Managed by transform now */
 }
 
 #camera-system.active {
@@ -868,18 +881,68 @@ body {
     width: 100%;
     height: 100%;
     background:
-        linear-gradient(to right, #000 0%, transparent 10%, transparent 90%, #000 100%),
-        linear-gradient(to top, #050505 0%, #111 100%);
+        linear-gradient(45deg, #050505 25%, transparent 25%) 0 0,
+        linear-gradient(-45deg, #050505 25%, transparent 25%) 0 0,
+        linear-gradient(45deg, transparent 75%, #050505 75%) 0 0,
+        linear-gradient(-45deg, transparent 75%, #050505 75%) 0 0;
+    background-size: 100px 100px;
+    background-color: #111;
+    box-shadow: inset 0 0 150px #000;
+}
+
+.kitchen {
+    background: #1a1a1a;
+}
+
+.kitchen .counter {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(to top, #333, #555);
+    border-top: 5px solid #888;
+}
+
+.wall-shelf {
+    position: absolute;
+    top: 30%;
+    left: 10%;
+    width: 40%;
+    height: 15px;
+    background: #444;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.vent-detail {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 150px;
+    background: repeating-linear-gradient(0deg, #000 0, #000 10px, #222 10px, #222 20px);
+    border: 5px solid #444;
 }
 
 .tables-group {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-image: radial-gradient(circle, #333 10px, transparent 11px);
-    background-size: 100px 100px;
-    background-position: 50px 50px;
-    opacity: 0.5;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    padding: 50px;
+    opacity: 0.3;
+}
+
+.tables-group::before {
+    content: '';
+    width: 80px;
+    height: 80px;
+    background: #444;
+    border-radius: 50%;
+    box-shadow: 150px 0 0 #444, 300px 0 0 #444, 0 150px 0 #444, 150px 150px 0 #444, 300px 150px 0 #444;
 }
 
 #win-screen h1 {
