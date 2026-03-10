@@ -1,5 +1,5 @@
 // --- GAME CONSTANTS ---
-const GAME_HOUR_MS = 50000; // 50s per hour (5 min total)
+const GAME_HOUR_MS = 10000; // 50s per hour (5 min total)
 const MAX_ENERGY = 100;
 
 // --- STATE VARIABLES ---
@@ -358,6 +358,9 @@ function toggleMonitor() {
 }
 
 function switchCamera(id) {
+    // Se o Erro estava na câmera anterior, ele some ao trocar
+    if (animatronics.Erro.pos !== 'hidden') animatronics.Erro.pos = 'hidden';
+
     currentCam = id;
     playSound('blip', false, 0.5, 1000); // Toca blip por 1s max
     document.querySelectorAll('.cam-btn').forEach(b => b.classList.toggle('active', b.dataset.cam === id));
@@ -386,6 +389,7 @@ function updateAI() {
     moveAnim('Ave');
     moveFoxy();
     moveFreddy();
+    moveError();
     if (isMonitorOpen) renderCamView(currentCam);
     renderDoorVisual('left');
     renderDoorVisual('right');
@@ -425,6 +429,27 @@ function moveFreddy() {
     if (Math.random() * 20 < lvl) {
         let idx = a.route.indexOf(a.pos);
         if (idx < a.route.length - 1) a.pos = a.route[idx + 1];
+    }
+}
+
+function moveError() {
+    let a = animatronics.Erro;
+    let lvl = a.ai[currentNight];
+    if (lvl === 0 || !isMonitorOpen) return;
+
+    // Se ele já está visível, ele some se o jogador mudar de câmera (lógica no switchCamera)
+    if (a.pos !== 'hidden') return;
+
+    // Chance rara de aparecer na câmera atual (estilo Golden Freddy)
+    if (Math.random() * 100 < lvl * 2) {
+        a.pos = currentCam;
+        console.log("⚠️ O ERRO APARECEU NA CAM " + currentCam);
+        // Efeito de estática forte para avisar o jogador
+        const s = document.getElementById('static-overlay');
+        if (s) {
+            s.classList.add('heavy');
+            setTimeout(() => s.classList.remove('heavy'), 500);
+        }
     }
 }
 
