@@ -381,7 +381,7 @@ function renderCamView(id) {
     const roomScenes = {
         '1': '<div class="scene stage"><div class="curtain"></div><div class="floor-checkered"></div></div>',
         '2': '<div class="scene kitchen"><div class="counter"></div><div class="wall-shelf"></div></div>',
-        '3': '<div class="scene cove"><div class="star-curtain"></div><div class="sign-blank"></div></div>',
+        '3': '<div class="scene cove"><div class="cove-curtain left"></div><div class="cove-curtain right"></div><div class="cove-sign">SORRY!<br>OUT OF ORDER</div></div>',
         '4a': '<div class="scene hallway-west"><div class="hallway-perspective"></div></div>',
         '4b': '<div class="scene corner-west"><div class="wall-posters"></div><div class="creepy-poster"></div><div class="hanging-wires-cam"></div><div class="corner-trash"></div><div style="position:absolute; bottom:10px; left:10px; color:red; font-size:12px; opacity:0.5;">SINAL REFORÇADO v2</div></div>',
         '5a': '<div class="scene hallway-east"><div class="hallway-perspective"></div></div>',
@@ -392,13 +392,15 @@ function renderCamView(id) {
     };
 
     // Remove labels e foca na cena
-    let html = `<div class="cam-scene-container" style="position:absolute; width:100%; height:100%; z-index:1; opacity: 1;">${roomScenes[id] || ''}</div>`;
+    let html = `<div class="cam-scene-container" style="position:absolute; width:100%; height:100%; z-index:1;">${roomScenes[id] || ''}</div>`;
 
     if (id === '2') {
         html = '<div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:40px; color:#555; text-align:center; width: 100%; font-family: monospace;">- SEM SINAL VISUAL -<br>🔊 <i>Cozinha</i></div>';
     } else if (id === '3') {
         let s = animatronics.Corredor.state;
-        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:100px; position:absolute; left: 50%; top: 70%; transform: translate(-150%, -50%);">🦊</span>' : '<span style="font-size:180px; position:absolute; left: 50%; top: 70%; transform: translate(-50%, -50%);">🦊</span>');
+        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:100px; position:absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); z-index:3;">🦊</span>' : (s === 2 ? '<span style="font-size:150px; position:absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); z-index:3;">🦊</span>' : '<span style="font-size:180px; position:absolute; left: 50%; top: 70%; transform: translate(-50%, -50%); z-index:3;">🦊</span>'));
+        // Adiciona a classe de estado à cena para o CSS das cortinas
+        html = `<div class="cam-scene-container cove state-${s}" style="position:absolute; width:100%; height:100%; z-index:1;">${roomScenes[id] || ''}</div>`;
         html = `<div style="z-index:10; position:absolute; width:100%; height:100%; pointer-events:none;">${foxy}</div>` + html;
     } else {
         let anims = '';

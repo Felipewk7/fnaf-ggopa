@@ -888,36 +888,73 @@ body {
     border-top: 5px solid #555;
 }
 
-.star-curtain {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: #111;
-    background-image: radial-gradient(white, rgba(255, 255, 255, .2) 2px, transparent 40px);
-    background-size: 100px 100px;
-    border-left: 20px solid #500;
-    border-right: 20px solid #500;
+/* CAMERA 3: PIRATE COVE */
+.cove {
+    background: #050505;
 }
 
-.cove .sign {
+/* Placa de 'Out of Order' */
+.cove-sign {
     position: absolute;
-    bottom: 20%;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
     background: #2a1a0a;
-    color: #ffd700;
+    border: 4px solid #1a0a00;
     padding: 10px 20px;
-    border: 3px solid #1a0a00;
+    color: #ffd700;
     font-size: 24px;
-    white-space: nowrap;
+    z-index: 5;
+    text-align: center;
+    box-shadow: 0 5px 15px #000;
+}
+
+.cove-curtain {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, #4b0082, #4b0082 20px, #300050 20px, #300050 40px);
+    background-image:
+        repeating-linear-gradient(90deg, #4b0082, #4b0082 20px, #300050 20px, #300050 40px),
+        radial-gradient(white 1px, transparent 1px);
+    background-size: 100% 100%, 50px 50px;
+    z-index: 4;
+    transition: width 0.5s ease-in-out;
+    border-bottom: 10px solid #1a1a1a;
+}
+
+.cove-curtain.left {
+    left: 0;
+    border-right: 2px solid #000;
+}
+
+.cove-curtain.right {
+    right: 0;
+    border-left: 2px solid #000;
+}
+
+/* Estados da Cortina */
+.cove.state-0 .cove-curtain {
+    width: 50%;
+}
+
+.cove.state-1 .cove-curtain {
+    width: 40%;
+}
+
+.cove.state-2 .cove-curtain {
+    width: 20%;
+}
+
+.cove.state-3 .cove-curtain {
+    width: 5%;
 }
 
 .hallway-perspective {
     width: 100%;
     height: 100%;
-    background:
-        linear-gradient(45deg, #050505 25%, transparent 25%) 0 0,
+    background: linear-gradient(45deg, #050505 25%, transparent 25%) 0 0,
         linear-gradient(-45deg, #050505 25%, transparent 25%) 0 0,
         linear-gradient(45deg, transparent 75%, #050505 75%) 0 0,
         linear-gradient(-45deg, transparent 75%, #050505 75%) 0 0;
