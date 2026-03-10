@@ -373,7 +373,7 @@ function renderCamView(id) {
         '8': '<div class="scene dining"><div class="tables-group"></div><div class="party-banners"></div></div>'
     };
 
-    let html = `<div class="cam-scene-container" style="position:absolute; width:100%; height:100%; z-index:1; opacity: 0.3;">${roomScenes[id] || ''}</div>`;
+    let html = `<div class="cam-scene-container" style="position:absolute; width:100%; height:100%; z-index:1; opacity: 0.8;">${roomScenes[id] || ''}</div>`;
 
     if (id === '2') {
         html = '<div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:40px; color:#555; text-align:center; width: 100%;">- SEM SINAL VISUAL -<br>🔊 <i>Ruídos de Panelas</i></div>';
@@ -386,7 +386,7 @@ function renderCamView(id) {
         for (let k in animatronics) {
             if (animatronics[k].pos === id && k !== 'Corredor') anims += animatronics[k].emoji;
         }
-        html = `<div style="z-index:2; position:absolute; top: 55%; left: 50%; transform: translate(-50%; -50%); font-size:150px; width:100%; text-align:center;">${anims}</div>` + html;
+        html = `<div style="z-index:2; position:absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); font-size:150px; width:100%; text-align:center;">${anims}</div>` + html;
     }
     document.getElementById('animatronics-view').innerHTML = html;
 }
