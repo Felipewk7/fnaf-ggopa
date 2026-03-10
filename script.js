@@ -23,13 +23,11 @@ let aiTick = null;
 // Animatronics Config
 const animatronics = {
     // Níveis de IA para [Noite 1, 2, 3, 4, 5, Custom(6)]
-    // --- ONDE ALTERAR AS IMAGENS ---
-    // Removido o "./" do início do caminho para melhorar compatibilidade
-    "Coelho": { name: "O Coelho", img: 'assets/images/coelho.png.png', emoji: '🐰', pos: '1', ai: [0, 1, 3, 6, 12, 18], route: ['1', '8', '6', '4a', '4b', 'office'] },
-    "Ave": { name: "A Ave", img: 'assets/images/ave.png.png', emoji: '🐥', pos: '1', ai: [0, 1, 2, 5, 10, 15], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
-    "Corredor": { name: "O Corredor", img: 'assets/images/corredor.png.png', emoji: '🦊', pos: '3', ai: [0, 0, 1, 3, 6, 10], state: 0 },
-    "Observador": { name: "O Observador", img: 'assets/images/observador.png.png', emoji: '🐻', pos: '1', ai: [0, 0, 0, 2, 5, 10], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
-    "Erro": { name: "O Erro", img: 'assets/images/lagosta.png.jpeg', emoji: '🦞', pos: 'hidden', ai: [0, 0, 0, 0, 1, 3] }
+    "Coelho": { name: "O Coelho", img: './assets/images/coelho.png', emoji: '🐰', pos: '1', ai: [0, 1, 3, 6, 12, 18], route: ['1', '8', '6', '4a', '4b', 'office'] },
+    "Ave": { name: "A Ave", img: './assets/images/ave.png', emoji: '🐥', pos: '1', ai: [0, 1, 2, 5, 10, 15], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
+    "Corredor": { name: "O Corredor", img: './assets/images/corredor.png', emoji: '🦊', pos: '3', ai: [0, 0, 1, 3, 6, 10], state: 0 },
+    "Observador": { name: "O Observador", img: './assets/images/observador.png', emoji: '🐻', pos: '1', ai: [0, 0, 0, 2, 5, 10], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
+    "Erro": { name: "O Erro", img: './assets/images/lagosta.jpg', emoji: '🦞', pos: 'hidden', ai: [0, 0, 0, 0, 1, 3] }
 };
 
 let attackInNextTick = { Coelho: false, Ave: false, Observador: false };
@@ -57,18 +55,18 @@ console.log("FNAF-GGOPA: Script de áudio carregado!");
 // --- SOUNDS ---
 const sounds = {};
 const soundFiles = {
-    menu: 'menu.mp3.mp3',
-    ambience: 'ambience.mp3.mp3',
-    kitchen: 'kitchen.mp3.mp3',
-    door: 'door.mp3.mp3',
-    light: 'light.mp3.mp3',
-    monitor: 'monitor.mp3.mp3',
-    powerout: 'powerout.mp3.mp3',
-    jumpscare: 'jumpscare.mp3.mp3',
-    jumpscare_lagosta: 'jumpscare_lagosta.mp3.mp3', // --- ONDE COLOCAR O SOM DA LAGOSTA ---
-    blip: 'blip.mp3.mp3',
-    freddy_music: 'freddy.mp3.mp3',
-    victory: 'victory.mp3.mp3'
+    menu: 'menu.mp3',
+    ambience: 'ambience.mp3',
+    kitchen: 'kitchen.mp3',
+    door: 'door.mp3',
+    light: 'light.mp3',
+    monitor: 'monitor.mp3',
+    powerout: 'powerout.mp3',
+    jumpscare: 'jumpscare.mp3',
+    jumpscare_lagosta: 'jumpscare_lagosta.mp3',
+    blip: 'blip.mp3',
+    freddy_music: 'freddy.mp3',
+    victory: 'victory.mp3'
 };
 
 // Inicializa os sons com tratamento de erro básico
