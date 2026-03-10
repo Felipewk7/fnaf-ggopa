@@ -62,7 +62,8 @@ const soundFiles = {
     monitor: 'monitor.mp3.mp3',
     powerout: 'powerout.mp3.mp3',
     jumpscare: 'jumpscare.mp3.mp3',
-    blip: 'blip.mp3.mp3'
+    blip: 'blip.mp3.mp3',
+    freddy_music: 'freddy.mp3.mp3'
 };
 
 // Inicializa os sons com tratamento de erro básico
@@ -540,7 +541,36 @@ function triggerPowerOut() {
     updateUsage();
     if (gameTick) clearInterval(gameTick);
     if (aiTick) clearInterval(aiTick);
-    setTimeout(() => { if (!screens.menu.classList.contains('active')) triggerJumpscare('Observador'); }, 30000);
+
+    // Inicia a música do Freddy após 3 segundos no escuro total
+    setTimeout(() => {
+        if (!screens.menu.classList.contains('active') && powerOut) {
+            playSound('freddy_music', true, 0.5);
+
+            // Freddy piscando na porta esquerda no escuro
+            const leftDoor = document.getElementById('hallway-left');
+            if (leftDoor) {
+                leftDoor.style.fontSize = "150px";
+                leftDoor.style.textAlign = "center";
+                let freddyFlash = setInterval(() => {
+                    if (!powerOut || screens.menu.classList.contains('active')) {
+                        clearInterval(freddyFlash);
+                        leftDoor.innerText = '';
+                        return;
+                    }
+                    leftDoor.innerText = leftDoor.innerText === '🐻' ? '' : '🐻';
+                }, 600);
+            }
+        }
+    }, 3000);
+
+    // Ataque do Freddy após um tempo aleatório (entre 10 e 25 segundos)
+    const randomAttackTime = Math.floor(Math.random() * 15000) + 10000;
+    setTimeout(() => {
+        if (!screens.menu.classList.contains('active') && powerOut) {
+            triggerJumpscare('Observador');
+        }
+    }, randomAttackTime);
 }
 
 function triggerJumpscare(key) {
