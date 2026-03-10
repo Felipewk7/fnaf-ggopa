@@ -56,8 +56,16 @@ body {
     display: none !important;
 }
 
-#main-menu.active {
-    display: flex !important;
+#main-menu {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    background-image: url('./assets/menu_bg.jpg');
+    /* VOCÊ PODE TROCAR ESSA IMAGEM */
+    background-size: cover;
+    background-position: center;
+    z-index: 1000;
 }
 
 #office.active {
@@ -608,7 +616,8 @@ body {
     z-index: 20000;
     transform: translateY(100%);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    display: block !important;
+    display: flex !important;
+    /* Mudei para flex para centralizar elementos */
 }
 
 #camera-system.active {
@@ -817,9 +826,73 @@ body {
     background: #000;
 }
 
-/* 6AM ANIMATION */
-.win-animation {
-    animation: celebrate 1s ease-in-out infinite;
+/* VICTORY SCREEN (NIGHT 5) */
+#victory-screen {
+    background: radial-gradient(circle, #222 0%, #000 100%);
+    color: #fff;
+    text-align: center;
+    z-index: 50000;
+}
+
+.victory-content {
+    animation: fadeIn 2s ease-out;
+}
+
+.cake-emoji {
+    font-size: 100px;
+    margin: 20px;
+    animation: bounce 2s infinite ease-in-out;
+}
+
+.gold-text {
+    color: #ffd700;
+    font-size: 70px;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    margin-bottom: 10px;
+}
+
+.reward-text {
+    font-style: italic;
+    color: #aaa;
+}
+
+#btn-back-menu {
+    background: #444;
+    color: #fff;
+    border: 2px solid #ffd700;
+    padding: 15px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: all 0.3s;
+}
+
+#btn-back-menu:hover {
+    background: #ffd700;
+    color: #000;
+    transform: scale(1.1);
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes celebrate {

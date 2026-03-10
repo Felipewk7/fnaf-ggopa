@@ -63,7 +63,8 @@ const soundFiles = {
     powerout: 'powerout.mp3.mp3',
     jumpscare: 'jumpscare.mp3.mp3',
     blip: 'blip.mp3.mp3',
-    freddy_music: 'freddy.mp3.mp3'
+    freddy_music: 'freddy.mp3.mp3',
+    victory: 'victory.mp3.mp3'
 };
 
 // Inicializa os sons com tratamento de erro básico
@@ -158,6 +159,9 @@ function init() {
 
     const retryBtn = document.getElementById('btn-retry');
     if (retryBtn) retryBtn.onclick = () => window.location.reload();
+
+    const backMenuBtn = document.getElementById('btn-back-menu');
+    if (backMenuBtn) backMenuBtn.onclick = () => window.location.reload();
 
     document.getElementById('btn-door-left').onclick = (e) => toggleDoor('left');
     document.getElementById('btn-light-left').onclick = (e) => toggleLight('left');
@@ -547,15 +551,18 @@ function triggerPowerOut() {
         if (!screens.menu.classList.contains('active') && powerOut) {
             playSound('freddy_music', true, 0.5);
 
-            // Freddy piscando na porta esquerda no escuro
+            // Freddy piscando na porta esquerda no escuro (Olhos Brilhando)
             const leftDoor = document.getElementById('hallway-left');
             if (leftDoor) {
                 leftDoor.style.fontSize = "150px";
                 leftDoor.style.textAlign = "center";
+                leftDoor.style.zIndex = "100"; // Garante que apareça sobre o escuro
+                leftDoor.style.color = "white"; // Faz os olhos/emoji brilharem no preto
                 let freddyFlash = setInterval(() => {
                     if (!powerOut || screens.menu.classList.contains('active')) {
                         clearInterval(freddyFlash);
                         leftDoor.innerText = '';
+                        leftDoor.style.color = "";
                         return;
                     }
                     leftDoor.innerText = leftDoor.innerText === '🐻' ? '' : '🐻';
@@ -602,10 +609,19 @@ function winGame() {
 
         setTimeout(() => {
             timeDisplay.classList.remove('win-animation');
-            showScreen('win');
-            let nextN = currentNight + 1;
-            if (nextN > 5) nextN = 5; // Limite de 5 noites (mais Noite 6 oculta se desejar)
-            saveProgress(nextN);
+
+            // Se venceu a Noite 5, mostra tela final de parabéns
+            if (currentNight === 5) {
+                stopAllSounds();
+                playSound('victory', false, 0.6);
+                showScreen('victory-screen');
+                saveProgress(5); // Mantém na 5 ou libera modo extra se quiser
+            } else {
+                showScreen('win');
+                let nextN = currentNight + 1;
+                if (nextN > 5) nextN = 5;
+                saveProgress(nextN);
+            }
         }, 3000);
     }, 2000);
 }
