@@ -567,10 +567,15 @@ body {
     pointer-events: none;
 }
 
-.hallway.lit {
+.hallway.lit,
+.power-out .hallway {
     opacity: 1;
-    background: rgba(255, 255, 255, 0.05);
-    /* Very slight tint */
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.power-out .hallway {
+    z-index: 500;
+    /* Garante que fique acima do cenário escuro */
 }
 
 /* MONITOR TRIGGER (HOVER) */

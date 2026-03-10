@@ -27,7 +27,7 @@ const animatronics = {
     "Ave": { name: "A Ave", emoji: '🐥', pos: '1', ai: [0, 1, 2, 5, 10, 15], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
     "Corredor": { name: "O Corredor", emoji: '🦊', pos: '3', ai: [0, 0, 1, 3, 6, 10], state: 0 },
     "Observador": { name: "O Observador", emoji: '🐻', pos: '1', ai: [0, 0, 0, 2, 5, 10], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
-    "Erro": { name: "O Erro", emoji: '🟨', pos: 'hidden', ai: [0, 0, 0, 0, 1, 3] }
+    "Erro": { name: "O Erro", emoji: '🦞', pos: 'hidden', ai: [0, 0, 0, 0, 1, 3] }
 };
 
 let attackInNextTick = { Coelho: false, Ave: false, Observador: false };
@@ -556,15 +556,17 @@ function triggerPowerOut() {
             // Freddy piscando na porta esquerda no escuro (Olhos Brilhando)
             const leftDoor = document.getElementById('hallway-left');
             if (leftDoor) {
-                leftDoor.style.fontSize = "150px";
+                leftDoor.style.fontSize = "160px";
                 leftDoor.style.textAlign = "center";
-                leftDoor.style.zIndex = "100"; // Garante que apareça sobre o escuro
-                leftDoor.style.color = "white"; // Faz os olhos/emoji brilharem no preto
+                leftDoor.style.color = "white";
+                leftDoor.style.textShadow = "0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.4)";
+
                 let freddyFlash = setInterval(() => {
                     if (!powerOut || screens.menu.classList.contains('active')) {
                         clearInterval(freddyFlash);
                         leftDoor.innerText = '';
                         leftDoor.style.color = "";
+                        leftDoor.style.textShadow = "";
                         return;
                     }
                     leftDoor.innerText = leftDoor.innerText === '🐻' ? '' : '🐻';
