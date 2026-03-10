@@ -1,5 +1,4 @@
-// --- GAME CONSTANTS ---
-const GAME_HOUR_MS = 50001; // 50s per hour (5 min total)
+const GAME_HOUR_MS = 50000; // 50 segundos por hora (5 minutos de noite total)
 const MAX_ENERGY = 100;
 
 
