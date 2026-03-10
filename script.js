@@ -22,10 +22,10 @@ let aiTick = null;
 
 // Animatronics Config
 const animatronics = {
-    "Coelho": { name: "O Coelho", emoji: '🐰', pos: '1', ai: [0, 2, 4, 6, 8, 12], route: ['1', '4a', '4b', 'office'] },
-    "Ave": { name: "A Ave", emoji: '🐥', pos: '1', ai: [0, 1, 3, 5, 7, 10], route: ['1', '2', '5a', '5b', 'office'] },
+    "Coelho": { name: "O Coelho", emoji: '🐰', pos: '1', ai: [0, 2, 4, 6, 8, 12], route: ['1', '8', '6', '4a', '4b', 'office'] },
+    "Ave": { name: "A Ave", emoji: '🐥', pos: '1', ai: [0, 1, 3, 5, 7, 10], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
     "Corredor": { name: "O Corredor", emoji: '🦊', pos: '3', ai: [0, 0, 1, 3, 5, 8], state: 0 },
-    "Observador": { name: "O Observador", emoji: '🐻', pos: '1', ai: [0, 0, 0, 2, 4, 8], route: ['1', '2', '5a', '5b', 'office'] },
+    "Observador": { name: "O Observador", emoji: '🐻', pos: '1', ai: [0, 0, 0, 2, 4, 8], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
     "Erro": { name: "O Erro", emoji: '🟨', pos: 'hidden', ai: [0, 0, 0, 0, 1, 2] }
 };
 
@@ -242,7 +242,18 @@ function switchCamera(id) {
     const s = document.getElementById('static-overlay');
     s.classList.add('heavy');
     setTimeout(() => s.classList.remove('heavy'), 150);
-    const names = { '1': 'PALCO', '2': 'COZINHA', '3': 'COVA', '4a': 'CORREDOR ESQ', '4b': 'CANTO ESQ', '5a': 'CORREDOR DIR', '5b': 'CANTO DIR' };
+    const names = {
+        '1': 'PALCO',
+        '2': 'COZINHA',
+        '3': 'COVA',
+        '4a': 'CORREDOR ESQ',
+        '4b': 'CANTO ESQ',
+        '5a': 'CORREDOR DIR',
+        '5b': 'CANTO DIR',
+        '6': 'ÁREA DE SERVIÇO',
+        '7': 'BANHEIROS',
+        '8': 'SALÃO DE FESTAS'
+    };
     document.getElementById('cam-name').innerText = `CAM ${id.toUpperCase()} - ${names[id] || '???'}`;
     renderCamView(id);
 }
@@ -296,12 +307,18 @@ function moveFreddy() {
 }
 
 function checkAttacks() {
+    const retreat = (key) => {
+        let route = animatronics[key].route;
+        // Volta para qualquer lugar da rota (exceto o escritório e as salas de ataque imediato)
+        let safeRooms = route.filter(r => r !== 'office' && r !== '4b' && r !== '5b');
+        animatronics[key].pos = safeRooms[Math.floor(Math.random() * safeRooms.length)];
+        attackInNextTick[key] = false;
+    };
+
     // Coelho
     if (animatronics.Coelho.pos === 'office') {
-        if (isLeftDoorClosed) {
-            animatronics.Coelho.pos = ['4a', '4b'][Math.floor(Math.random() * 2)];
-            attackInNextTick.Coelho = false;
-        } else {
+        if (isLeftDoorClosed) retreat('Coelho');
+        else {
             if (attackInNextTick.Coelho) triggerJumpscare('Coelho');
             else attackInNextTick.Coelho = true;
         }
@@ -309,10 +326,8 @@ function checkAttacks() {
 
     // Ave
     if (animatronics.Ave.pos === 'office') {
-        if (isRightDoorClosed) {
-            animatronics.Ave.pos = ['5a', '5b'][Math.floor(Math.random() * 2)];
-            attackInNextTick.Ave = false;
-        } else {
+        if (isRightDoorClosed) retreat('Ave');
+        else {
             if (attackInNextTick.Ave) triggerJumpscare('Ave');
             else attackInNextTick.Ave = true;
         }
@@ -320,10 +335,8 @@ function checkAttacks() {
 
     // Freddy
     if (animatronics.Observador.pos === 'office') {
-        if (isRightDoorClosed) {
-            animatronics.Observador.pos = ['5a', '5b'][Math.floor(Math.random() * 2)];
-            attackInNextTick.Observador = false;
-        } else {
+        if (isRightDoorClosed) retreat('Observador');
+        else {
             if (attackInNextTick.Observador) triggerJumpscare('Observador');
             else attackInNextTick.Observador = true;
         }
