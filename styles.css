@@ -153,11 +153,17 @@ body {
 #office-panner {
     position: absolute;
     width: 1600px;
-    /* Wider than container for panning */
     height: 100%;
     left: 0;
     transition: left 0.1s ease-out;
-    background: linear-gradient(to bottom, #111, #000);
+    /* Base para imagem de fundo futura: background-image: url('office_bg.png'); */
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        repeating-linear-gradient(45deg, #111 0px, #111 2px, #0a0a0a 2px, #0a0a0a 10px),
+        radial-gradient(circle at 50% 50%, #222 0%, #000 80%);
+    background-size: cover;
+    border-left: 20px solid #111;
+    border-right: 20px solid #111;
 }
 
 #room {
@@ -365,10 +371,11 @@ body {
 #map {
     width: 350px;
     height: 350px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid #555;
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #666;
     position: relative;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="350" height="350" viewBox="0 0 350 350"><path d="M 120 40 L 230 40 L 230 140 L 310 140 L 310 310 L 40 310 L 40 140 L 120 140 Z" stroke="white" stroke-width="2" fill="none"/></svg>');
+    /* Planta Baixa Estilo FNAF */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="350" height="350" viewBox="0 0 350 350"><path d="M 125 20 H 225 V 70 H 125 Z M 80 80 H 270 V 210 H 80 Z M 20 80 H 70 V 140 H 20 Z M 20 170 H 70 V 230 H 20 Z M 280 80 H 330 V 140 H 280 Z M 280 170 H 330 V 230 H 280 Z M 80 210 V 320 H 130 V 210 Z M 220 210 V 320 H 270 V 210 Z" stroke="white" stroke-width="2" fill="none"/></svg>');
 }
 
 .map-label {
@@ -522,4 +529,29 @@ body {
 
 .power-out #room {
     background: #000;
+}
+
+/* 6AM ANIMATION */
+.win-animation {
+    animation: celebrate 1s ease-in-out infinite;
+}
+
+@keyframes celebrate {
+
+    0%,
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+        filter: brightness(2) drop-shadow(0 0 20px #fff);
+    }
+}
+
+#win-screen h1 {
+    font-size: 150px;
+    color: var(--green-safe);
+    text-shadow: 0 0 30px rgba(51, 204, 51, 0.8);
 }

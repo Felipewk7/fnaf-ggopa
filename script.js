@@ -22,11 +22,12 @@ let aiTick = null;
 
 // Animatronics Config
 const animatronics = {
-    "Coelho": { name: "O Coelho", emoji: '🐰', pos: '1', ai: [0, 2, 4, 6, 8, 12], route: ['1', '8', '6', '4a', '4b', 'office'] },
-    "Ave": { name: "A Ave", emoji: '🐥', pos: '1', ai: [0, 1, 3, 5, 7, 10], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
-    "Corredor": { name: "O Corredor", emoji: '🦊', pos: '3', ai: [0, 0, 1, 3, 5, 8], state: 0 },
-    "Observador": { name: "O Observador", emoji: '🐻', pos: '1', ai: [0, 0, 0, 2, 4, 8], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
-    "Erro": { name: "O Erro", emoji: '🟨', pos: 'hidden', ai: [0, 0, 0, 0, 1, 2] }
+    // Níveis de IA para [Noite 1, 2, 3, 4, 5, Custom(6)]
+    "Coelho": { name: "O Coelho", emoji: '🐰', pos: '1', ai: [0, 1, 3, 6, 12, 18], route: ['1', '8', '6', '4a', '4b', 'office'] },
+    "Ave": { name: "A Ave", emoji: '🐥', pos: '1', ai: [0, 1, 2, 5, 10, 15], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
+    "Corredor": { name: "O Corredor", emoji: '🦊', pos: '3', ai: [0, 0, 1, 3, 6, 10], state: 0 },
+    "Observador": { name: "O Observador", emoji: '🐻', pos: '1', ai: [0, 0, 0, 2, 5, 10], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
+    "Erro": { name: "O Erro", emoji: '🟨', pos: 'hidden', ai: [0, 0, 0, 0, 1, 3] }
 };
 
 let attackInNextTick = { Coelho: false, Ave: false, Observador: false };
@@ -68,9 +69,13 @@ function playSound(s) {
 function init() {
     loadProgress();
 
-    document.getElementById('btn-new-game').onclick = () => startGame(1);
+    document.getElementById('btn-new-game').onclick = () => { localStorage.removeItem('nightfall_night'); startGame(1); };
     document.getElementById('btn-continue').onclick = () => startGame(currentNight);
-    document.getElementById('btn-next-night').onclick = () => startGame(currentNight);
+    document.getElementById('btn-next-night').onclick = () => {
+        // Pega a noite salva e inicia a próxima
+        let saved = parseInt(localStorage.getItem('nightfall_night')) || 1;
+        startGame(saved);
+    };
 
     const retryBtn = document.getElementById('btn-retry');
     if (retryBtn) retryBtn.onclick = () => window.location.reload();
@@ -399,8 +404,30 @@ function triggerJumpscare(key) {
 
 function winGame() {
     if (gameTick) clearInterval(gameTick); if (energyTick) clearInterval(energyTick); if (aiTick) clearInterval(aiTick);
-    showScreen('win');
-    saveProgress(currentNight + 1);
+
+    // Mini-animação das 6AM
+    const timeDisplay = hud.time;
+    timeDisplay.innerText = "05:00 AM";
+
+    let flash = true;
+    const interval = setInterval(() => {
+        timeDisplay.innerText = flash ? "06:00 AM" : "";
+        flash = !flash;
+    }, 200);
+
+    setTimeout(() => {
+        clearInterval(interval);
+        timeDisplay.innerText = "06:00 AM";
+        timeDisplay.classList.add('win-animation');
+
+        setTimeout(() => {
+            timeDisplay.classList.remove('win-animation');
+            showScreen('win');
+            let nextN = currentNight + 1;
+            if (nextN > 5) nextN = 5; // Limite de 5 noites (mais Noite 6 oculta se desejar)
+            saveProgress(nextN);
+        }, 3000);
+    }, 2000);
 }
 
 function loadProgress() {
