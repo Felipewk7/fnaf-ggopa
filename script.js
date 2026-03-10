@@ -169,7 +169,7 @@ function showScreen(id) {
     screens[id].classList.add('active');
 
     // HUD e Botão do Monitor só aparecem durante a gameplay (escritório ou câmeras)
-    const isGameplay = (id === 'office' || id === 'cams');
+    const isGameplay = (id === 'office' || id === 'camera-system');
     document.getElementById('hud').style.display = isGameplay ? 'block' : 'none';
     document.getElementById('monitor-toggle').style.display = isGameplay ? 'flex' : 'none';
 }
@@ -366,12 +366,12 @@ function renderCamView(id) {
         '2': '<div class="scene kitchen"><div class="counter"></div><div class="wall-shelf"></div></div>',
         '3': '<div class="scene cove"><div class="star-curtain"></div><div class="sign-blank"></div></div>',
         '4a': '<div class="scene hallway-west"><div class="hallway-perspective"></div></div>',
-        '4b': '<div class="scene corner-west"><div class="poster-decor"></div></div>',
+        '4b': '<div class="scene corner-west"><div class="wall-posters"></div><div class="floor-shadow"></div><div class="hanging-wires-cam"></div></div>',
         '5a': '<div class="scene hallway-east"><div class="hallway-perspective"></div></div>',
         '5b': '<div class="scene corner-east"><div class="vent-detail"></div></div>',
-        '6': '<div class="scene supply"><div class="shelves"></div><div class="cleaning-cart"></div></div>',
-        '7': '<div class="scene bathrooms"><div class="stalls"></div></div>',
-        '8': '<div class="scene dining"><div class="tables-group"></div><div class="party-banners"></div></div>'
+        '6': '<div class="scene supply"><div class="storage-racks"></div><div class="cleaning-bucket"></div><div class="mop"></div></div>',
+        '7': '<div class="scene bathrooms"><div class="tiled-walls"></div><div class="stall-doors"></div><div class="bathroom-sinks"></div></div>',
+        '8': '<div class="scene dining"><div class="party-tables"><div class="table-set"></div><div class="table-set"></div><div class="table-set"></div></div><div class="party-banners-dining"></div></div>'
     };
 
     // Remove labels e foca na cena

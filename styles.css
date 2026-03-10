@@ -166,8 +166,8 @@ body {
 /* OFFICE PANNER */
 #office {
     z-index: 1;
-    /* Mantém no fundo */
     overflow: hidden;
+    background: #000;
 }
 
 #office-panner {
@@ -176,10 +176,10 @@ body {
     height: 100%;
     left: 0;
     transition: left 0.1s ease-out;
-    background: linear-gradient(to bottom, #111, #050505);
-    border-left: 20px solid #1a1a1a;
-    border-right: 20px solid #1a1a1a;
-    box-shadow: inset 0 0 100px #000;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000 85%);
+    border-left: 10px solid #111;
+    border-right: 10px solid #111;
+    box-shadow: inset 0 0 150px #000;
 }
 
 .office-bg-details {
@@ -197,31 +197,32 @@ body {
 }
 
 .wall-pipe.horizontal {
-    top: 50px;
+    top: 60px;
     width: 100%;
-    height: 10px;
-    background: #1a1a1a;
-    border-bottom: 2px solid #333;
+    height: 12px;
+    background: linear-gradient(to bottom, #111, #222, #111);
+    border-bottom: 2px solid #000;
     z-index: 1;
 }
 
 .wall-pipe.vertical {
-    left: 100px;
-    width: 10px;
+    left: 450px;
+    width: 12px;
     height: 100%;
-    background: #1a1a1a;
-    border-right: 2px solid #333;
+    background: linear-gradient(to right, #111, #222, #111);
+    border-right: 2px solid #000;
     z-index: 1;
 }
 
 .hanging-wires {
     position: absolute;
     top: 0;
-    left: 70%;
-    width: 50px;
-    height: 200px;
-    background-image: repeating-linear-gradient(90deg, #111 0, #111 2px, transparent 2px, transparent 10px);
-    opacity: 0.6;
+    left: 800px;
+    width: 250px;
+    height: 140px;
+    background: repeating-linear-gradient(90deg, transparent 0, transparent 40px, #111 40px, #111 42px);
+    opacity: 0.4;
+    pointer-events: none;
 }
 
 /* OFFICE ELEMENTS CLEANED */
@@ -244,81 +245,129 @@ body {
 
 .desk-surface {
     position: absolute;
-    bottom: -100px;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 1000px;
-    height: 250px;
-    background: linear-gradient(180deg, #111, #000);
-    border-top: 5px solid #222;
-    border-radius: 50% 50% 0 0;
-    box-shadow: 0 -10px 50px #000;
-    z-index: 15;
+    width: 1400px;
+    height: 180px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+    border-top: 10px solid #222;
+    box-shadow: 0 -20px 100px rgba(0, 0, 0, 1);
+    z-index: 10;
 }
 
 .poster-clean {
-    top: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 200px;
-    height: 250px;
-    background: #0a0a0a;
-    border: 10px solid #1a1a1a;
-    box-shadow: 10px 10px 40px #000;
-    z-index: 5;
+    top: 100px;
+    left: 400px;
+    /* Deslocado para a esquerda para não bater na HUD */
+    width: 180px;
+    height: 240px;
+    background: #080808;
+    border: 8px solid #151515;
+    box-shadow: 10px 10px 30px #000;
+    z-index: 2;
+    transform: rotate(-2deg);
+}
+
+.poster-text {
+    font-size: 38px;
+    color: #ff0000;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1;
 }
 
 .monitor-base {
-    bottom: 50px;
-    left: 25%;
-    width: 140px;
-    height: 100px;
-    background: #080808;
-    border: 3px solid #000;
-    z-index: 25;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-280px);
+    width: 220px;
+    height: 160px;
+    background: #111;
+    border: 8px solid #050505;
+    z-index: 20;
+    padding: 5px;
+    border-radius: 4px;
 }
 
 .monitor-screen {
-    width: 90%;
-    height: 85%;
-    background: #000;
-    box-shadow: inset 0 0 15px #0a0;
+    width: 100%;
+    height: 100%;
+    background: #001100;
     position: relative;
     overflow: hidden;
+    box-shadow: inset 0 0 20px #000;
+}
+
+.monitor-screen::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
 }
 
 .monitor-glow {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(0, 255, 0, 0.1), transparent);
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.15) 0%, transparent 80%);
+    animation: flicker 0.1s infinite alternate;
+}
+
+@keyframes flicker {
+    0% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 .fan-clean {
-    bottom: 80px;
+    bottom: 60px;
     left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
-    height: 120px;
-    z-index: 15;
+    transform: translateX(150px);
+    width: 140px;
+    height: 160px;
+    z-index: 20;
 }
 
 .fan-base {
     position: absolute;
-    bottom: -50px;
-    width: 50px;
-    height: 60px;
-    background: #151515;
-    border: 3px solid #333;
+    bottom: -10px;
+    width: 80px;
+    height: 30px;
+    background: #111;
+    border: 2px solid #222;
+    border-radius: 4px;
 }
 
 .fan-head {
-    width: 100px;
-    height: 100px;
+    width: 130px;
+    height: 130px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    border: 4px solid #333;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.fan-head::before {
+    /* Fan Cage */
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-radial-gradient(circle, transparent 0, transparent 10px, rgba(255, 255, 255, 0.05) 10px, rgba(255, 255, 255, 0.05) 11px);
+    border-radius: 50%;
 }
 
 .fan-blades {
@@ -339,37 +388,19 @@ body {
 }
 
 .phone-props {
-    bottom: 80px;
-    right: 20%;
-    width: 90px;
-    height: 70px;
-    z-index: 15;
-}
-
-.phone-body {
-    width: 60px;
-    height: 45px;
-    background: #151515;
-    border-radius: 4px;
-    border: 2px solid #333;
-}
-
-.phone-receiver {
-    position: absolute;
-    top: -5px;
-    width: 75px;
-    height: 18px;
-    background: #202020;
-    border-radius: 12px;
-    border: 2px solid #333;
+    bottom: 60px;
+    right: 480px;
+    width: 100px;
+    height: 80px;
+    z-index: 20;
 }
 
 .desk-clutter {
     bottom: 60px;
-    left: 15%;
+    left: 480px;
     flex-direction: row !important;
-    gap: 15px;
-    z-index: 15;
+    gap: 20px;
+    z-index: 20;
 }
 
 .paper-stack {
@@ -885,59 +916,142 @@ body {
     box-shadow: inset 0 0 150px #000;
 }
 
-.kitchen {
-    background: #1a1a1a;
+/* CAMERA 6: SUPPLY ROOM */
+.supply {
+    background: #0a0a0a;
 }
 
-.kitchen .counter {
+.storage-racks {
     position: absolute;
-    bottom: 0;
-    width: 100%;
+    width: 60%;
+    height: 80%;
+    right: 0;
+    top: 10%;
+    background: repeating-linear-gradient(0deg, #151515 0px, #151515 20px, #222 20px, #222 25px);
+    border-left: 10px solid #111;
+}
+
+.cleaning-bucket {
+    position: absolute;
+    bottom: 30px;
+    left: 15%;
+    width: 50px;
+    height: 40px;
+    background: #004488;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 0 15px #000;
+}
+
+.mop {
+    position: absolute;
+    bottom: 30px;
+    left: 20%;
+    width: 6px;
     height: 120px;
-    background: linear-gradient(to top, #333, #555);
-    border-top: 5px solid #888;
-}
-
-.wall-shelf {
-    position: absolute;
-    top: 30%;
-    left: 10%;
-    width: 40%;
-    height: 15px;
     background: #444;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    transform: rotate(-10deg);
 }
 
-.vent-detail {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 200px;
-    height: 150px;
-    background: repeating-linear-gradient(0deg, #000 0, #000 10px, #222 10px, #222 20px);
-    border: 5px solid #444;
+/* CAMERA 7: BATHROOMS */
+.bathrooms {
+    background: #151515;
 }
 
-.tables-group {
+.tiled-walls {
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 50% 50%, rgba(200, 200, 200, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    border-bottom: 80px solid #050505;
+}
+
+.stall-doors {
     position: absolute;
+    bottom: 80px;
+    width: 100%;
+    height: 160px;
+    display: flex;
+    justify-content: space-around;
+    padding: 0 50px;
+}
+
+.stall-doors::before,
+.stall-doors::after {
+    content: '';
+    width: 120px;
+    height: 100%;
+    background: #111;
+    border: 3px solid #222;
+    box-shadow: 5px 5px 20px #000;
+}
+
+/* CAMERA 8: DINING AREA */
+.dining {
+    background: #080808;
+}
+
+.party-tables {
     width: 100%;
     height: 100%;
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
-    padding: 50px;
-    opacity: 0.3;
+    padding-top: 100px;
 }
 
-.tables-group::before {
-    content: '';
-    width: 80px;
-    height: 80px;
-    background: #444;
+.table-set {
+    width: 150px;
+    height: 60px;
+    background: #1a1a1a;
     border-radius: 50%;
-    box-shadow: 150px 0 0 #444, 300px 0 0 #444, 0 150px 0 #444, 150px 150px 0 #444, 300px 150px 0 #444;
+    border-top: 10px solid #222;
+    position: relative;
+    box-shadow: 0 20px 40px #000;
+}
+
+.table-set::after {
+    content: '▲';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffcc00;
+    font-size: 20px;
+}
+
+.party-banners-dining {
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    height: 30px;
+    background: repeating-linear-gradient(90deg, #f00 0, #f00 20px, #00f 20px, #00f 40px);
+    opacity: 0.15;
+}
+
+/* CAMERA 4B: CORNER WEST */
+.corner-west {
+    background: #020202;
+}
+
+.wall-posters {
+    position: absolute;
+    top: 50px;
+    left: 60px;
+    width: 120px;
+    height: 160px;
+    background: #111;
+    border: 5px solid #050505;
+    box-shadow: inset 0 0 20px #000;
+}
+
+.hanging-wires-cam {
+    position: absolute;
+    top: 0;
+    right: 20%;
+    width: 2px;
+    height: 150px;
+    background: #111;
 }
 
 #win-screen h1 {
