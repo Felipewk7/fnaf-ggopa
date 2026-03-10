@@ -51,15 +51,15 @@ const hud = {
 
 // --- SOUNDS ---
 const sounds = {
-    menu: new Audio('assets/sounds/menu.mp3'),
-    ambience: new Audio('assets/sounds/ambience.mp3'),
-    kitchen: new Audio('assets/sounds/kitchen.mp3'),
-    door: new Audio('assets/sounds/door.mp3'),
-    light: new Audio('assets/sounds/light.mp3'),
-    monitor: new Audio('assets/sounds/monitor.mp3'),
-    powerout: new Audio('assets/sounds/powerout.mp3'),
-    jumpscare: new Audio('assets/sounds/jumpscare.mp3'),
-    blip: new Audio('assets/sounds/blip.mp3')
+    menu: new Audio('assets/sounds/menu.mp3.mp3'),
+    ambience: new Audio('assets/sounds/ambience.mp3.mp3'),
+    kitchen: new Audio('assets/sounds/kitchen.mp3.mp3'),
+    door: new Audio('assets/sounds/door.mp3.mp3'),
+    light: new Audio('assets/sounds/light.mp3.mp3'),
+    monitor: new Audio('assets/sounds/monitor.mp3.mp3'),
+    powerout: new Audio('assets/sounds/powerout.mp3.mp3'),
+    jumpscare: new Audio('assets/sounds/jumpscare.mp3.mp3'),
+    blip: new Audio('assets/sounds/blip.mp3.mp3')
 };
 
 function showScreen(id) {
@@ -154,7 +154,13 @@ function init() {
     });
 
     showScreen('menu');
-    playSound('menu', true, 0.5);
+
+    // SOLUÇÃO PARA O BLOQUEIO DE ÁUDIO DO NAVEGADOR (AUTO-PLAY)
+    // Toca a música assim que houver o primeiro clique ou interação
+    document.addEventListener('mousedown', function startMusic() {
+        if (sounds.menu.paused) playSound('menu', true, 0.4);
+        document.removeEventListener('mousedown', startMusic);
+    }, { once: true });
 }
 
 function startGame(night) {
@@ -248,7 +254,6 @@ function updateUsage() {
 function toggleDoor(side) {
     if (powerOut) return;
     playSound('door');
-    playSound('door');
     if (side === 'left') {
         isLeftDoorClosed = !isLeftDoorClosed;
         document.getElementById('door-left').classList.toggle('closed', isLeftDoorClosed);
@@ -263,7 +268,6 @@ function toggleDoor(side) {
 
 function toggleLight(side) {
     if (powerOut) return;
-    playSound('light');
     playSound('light');
     if (side === 'left') {
         isLeftLightOn = !isLeftLightOn;
