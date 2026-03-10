@@ -82,8 +82,8 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 2100;
-    /* Highest priority, even above cameras */
+    z-index: 2000;
+    /* HUD acima do escritório, abaixo das câmeras abertas */
     text-shadow: 2px 2px 5px #000;
 }
 
@@ -166,8 +166,9 @@ body {
 
 /* OFFICE PANNER */
 #office {
-    overflow-x: hidden;
-    overflow-y: hidden;
+    z-index: 1;
+    /* Mantém no fundo */
+    overflow: hidden;
 }
 
 #office-panner {
@@ -176,7 +177,7 @@ body {
     height: 100%;
     left: 0;
     transition: left 0.1s ease-out;
-    background: linear-gradient(to bottom, #111 0%, #080808 70%, #050505 100%);
+    background: linear-gradient(to bottom, #111, #050505);
     border-left: 20px solid #1a1a1a;
     border-right: 20px solid #1a1a1a;
     box-shadow: inset 0 0 100px #000;
@@ -197,17 +198,21 @@ body {
 }
 
 .wall-pipe.horizontal {
-    top: 15%;
-    left: 0;
+    top: 50px;
     width: 100%;
-    height: 30px;
+    height: 10px;
+    background: #1a1a1a;
+    border-bottom: 2px solid #333;
+    z-index: 1;
 }
 
 .wall-pipe.vertical {
-    top: 0;
-    left: 10%;
-    width: 25px;
+    left: 100px;
+    width: 10px;
     height: 100%;
+    background: #1a1a1a;
+    border-right: 2px solid #333;
+    z-index: 1;
 }
 
 .hanging-wires {
@@ -220,21 +225,14 @@ body {
     opacity: 0.6;
 }
 
-.desk {
-    position: relative;
-    width: 600px;
-    height: 600px;
-    margin-top: 50px;
-}
-
+/* OFFICE ELEMENTS CLEANED */
 .office-element {
     position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 5;
-    /* Abaixo do HUD (2100) e Câmeras (150 - que vou aumentar) */
+    z-index: 20;
 }
 
 .desk {
@@ -242,68 +240,59 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
+    z-index: 10;
 }
 
 .desk-surface {
     position: absolute;
     bottom: -100px;
-    /* Escondido parcialmente na base */
     left: 50%;
     transform: translateX(-50%);
-    width: 1200px;
-    height: 350px;
-    background: linear-gradient(to bottom, #1a1a1a, #050505);
-    border-top: 8px solid #222;
+    width: 1000px;
+    height: 250px;
+    background: linear-gradient(180deg, #111, #000);
+    border-top: 5px solid #222;
     border-radius: 50% 50% 0 0;
-    box-shadow: 0 -20px 100px #000;
-    z-index: 4;
+    box-shadow: 0 -10px 50px #000;
+    z-index: 15;
 }
 
 .poster-clean {
-    top: 60px;
+    top: 50px;
     left: 50%;
     transform: translateX(-50%);
-    width: 180px;
-    height: 240px;
+    width: 200px;
+    height: 250px;
     background: #0a0a0a;
     border: 10px solid #1a1a1a;
-    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.8);
-    z-index: 2;
-}
-
-.poster-text {
-    font-size: 45px;
-    color: #ff0000;
-    font-weight: bold;
-    text-align: center;
-    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    box-shadow: 10px 10px 40px #000;
+    z-index: 5;
 }
 
 .monitor-base {
     bottom: 50px;
     left: 25%;
-    width: 150px;
-    height: 120px;
-    background: #111;
-    border: 5px solid #000;
-    z-index: 10;
+    width: 140px;
+    height: 100px;
+    background: #080808;
+    border: 3px solid #000;
+    z-index: 25;
 }
 
 .monitor-screen {
     width: 90%;
     height: 85%;
     background: #000;
-    border-radius: 2px;
+    box-shadow: inset 0 0 15px #0a0;
     position: relative;
     overflow: hidden;
-    box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.2);
 }
 
 .monitor-glow {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(0, 255, 0, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.1), transparent);
 }
 
 .fan-clean {
@@ -580,8 +569,8 @@ body {
 /* CAMERA SYSTEM */
 #camera-system {
     background-color: #000;
-    z-index: 2200;
-    /* Acima do HUD (2100) para cobrir tudo quando aberto */
+    z-index: 9999;
+    /* TOP MOST */
     transform: translateY(100%);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: block !important;
@@ -821,25 +810,27 @@ body {
 
 .floor-checkered {
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 40%;
-    background-image:
-        linear-gradient(45deg, #111 25%, transparent 25%),
-        linear-gradient(-45deg, #111 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #111 75%),
-        linear-gradient(-45deg, transparent 75%, #111 75%);
-    background-size: 40px 40px;
-    background-position: 0 0, 0 20px, 20px 20px, 20px 0;
+    bottom: -50px;
+    width: 200%;
+    height: 100%;
+    left: -50%;
+    background:
+        conic-gradient(#200 90deg, #151515 90deg 180deg, #200 180deg 270deg, #151515 270deg);
+    background-size: 100px 100px;
+    transform: perspective(400px) rotateX(60deg);
+    transform-origin: bottom;
+    z-index: 1;
+    box-shadow: inset 0 200px 100px #000;
 }
 
 .curtain {
     position: absolute;
     top: 0;
     width: 100%;
-    height: 80%;
-    background: repeating-linear-gradient(90deg, #600 0, #600 30px, #400 30px, #400 40px);
-    border-bottom: 5px solid #200;
+    height: 75%;
+    background: repeating-linear-gradient(90deg, #800, #800 40px, #500 40px, #500 60px);
+    border-bottom: 10px solid #200;
+    z-index: 2;
 }
 
 .kitchen .counter {
