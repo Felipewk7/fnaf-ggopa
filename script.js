@@ -381,7 +381,7 @@ function renderCamView(id) {
         html = '<div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:40px; color:#555; text-align:center; width: 100%; font-family: monospace;">- SEM SINAL VISUAL -<br>🔊 <i>Cozinha</i></div>';
     } else if (id === '3') {
         let s = animatronics.Corredor.state;
-        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:100px; position:absolute; left: 50%; top: 50%; transform: translate(-150%, -50%);">🦊</span>' : '<span style="font-size:180px; position:absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">🦊</span>');
+        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:100px; position:absolute; left: 50%; top: 70%; transform: translate(-150%, -50%);">🦊</span>' : '<span style="font-size:180px; position:absolute; left: 50%; top: 70%; transform: translate(-50%, -50%);">🦊</span>');
         html = `<div style="z-index:10; position:absolute; width:100%; height:100%; pointer-events:none;">${foxy}</div>` + html;
     } else {
         let anims = '';
@@ -389,7 +389,7 @@ function renderCamView(id) {
             if (animatronics[k].pos === id && k !== 'Corredor') anims += animatronics[k].emoji;
         }
         if (anims) {
-            html = `<div style="z-index:10; position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:150px; width:100%; text-align:center; pointer-events:none;">${anims}</div>` + html;
+            html = `<div style="z-index:10; position:absolute; top: 70%; left: 50%; transform: translate(-50%, -50%); font-size:150px; width:100%; text-align:center; pointer-events:none;">${anims}</div>` + html;
         }
     }
     document.getElementById('animatronics-view').innerHTML = html;
