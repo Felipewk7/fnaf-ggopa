@@ -39,20 +39,25 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    display: none !important;
+    display: none;
 }
 
 .screen.active {
-    display: block !important;
+    display: block;
 }
 
 /* Explicit visibility logic for screens */
 #main-menu.active,
 #game-over.active,
 #win-screen.active,
-#victory-screen.active,
+#victory-screen.active {
+    display: flex !important;
+}
+
 #jumpscare.active {
     display: flex !important;
+    z-index: 99999;
+    /* Jumpscare no topo absoluto */
 }
 
 #office.active,
@@ -63,13 +68,20 @@ body {
 #main-menu {
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    background-color: #000;
-    background-image: url('./assets/menu_bg.jpg');
+    align-items: flex-start;
+    padding: 100px;
+    background-color: #080808;
+    /* Fallback caso a imagem não carregue */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('./assets/menu_bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    z-index: 1000;
+    z-index: 5000;
+    /* Aumentado para garantir que fique sobre o office */
+}
+
+#main-menu.active {
+    display: flex !important;
 }
 
 /* HUD - MUST BE ALWAYS VISIBLE */
@@ -123,16 +135,7 @@ body {
     border: 1px solid #000;
 }
 
-/* MAIN MENU */
-#main-menu {
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 100px;
-    background: #111;
-    z-index: 500;
-}
-
+/* MAIN MENU CONTENT */
 #main-menu h1 {
     font-size: 100px;
     margin-bottom: 50px;
@@ -143,21 +146,24 @@ body {
     display: block;
     background: none;
     border: none;
-    color: #666;
+    color: #fff;
     font-size: 40px;
     font-family: 'VT323', monospace;
     cursor: pointer;
     text-align: left;
     margin-bottom: 20px;
-    transition: color 0.2s;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
 #menu-options button:hover:not(:disabled) {
-    color: #fff;
+    color: var(--red-alert);
+    transform: translateX(20px);
+    text-shadow: 0 0 15px var(--red-alert);
 }
 
 #menu-options button:disabled {
-    color: #222;
+    color: #444;
     cursor: not-allowed;
 }
 

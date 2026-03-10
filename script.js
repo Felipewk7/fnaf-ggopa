@@ -39,7 +39,8 @@ const screens = {
     "camera-system": document.getElementById('camera-system'),
     jumpscare: document.getElementById('jumpscare'),
     gameover: document.getElementById('game-over'),
-    win: document.getElementById('win-screen')
+    win: document.getElementById('win-screen'),
+    victory: document.getElementById('victory-screen')
 };
 
 const hud = {
@@ -74,17 +75,18 @@ for (let s in soundFiles) {
 }
 
 function showScreen(id) {
-    // Esconde todas as telas
+    // Esconde todas as telas removendo a classe active
     for (let k in screens) {
         if (screens[k]) {
             screens[k].classList.remove('active');
-            screens[k].style.display = 'none';
         }
     }
-    // Mostra a tela atual
-    if (screens[id]) {
-        screens[id].classList.add('active');
-        screens[id].style.display = (id === 'office' || id === 'camera-system') ? 'block' : 'flex';
+    // Mostra a tela atual adicionando active
+    const target = (id === 'gameover') ? screens.gameover :
+        (id === 'victory-screen') ? screens.victory : screens[id];
+
+    if (target) {
+        target.classList.add('active');
     }
 
     // Garante que HUD e Gatilho do Monitor sempre apareçam no escritório ou câmeras (se houver energia)
