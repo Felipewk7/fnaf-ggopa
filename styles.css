@@ -166,13 +166,24 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    font-size: 60px;
+    gap: 15px;
+}
+
+.ascii-art {
+    white-space: pre;
+    font-family: 'VT323', monospace;
+    color: #ccc;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.ascii-art pre {
+    margin: 0;
 }
 
 .fan {
-    font-size: 80px;
-    animation: spin 0.1s linear infinite;
+    font-size: 30px;
+    line-height: 0.9;
+    animation: spin 0.2s linear infinite;
 }
 
 @keyframes spin {
@@ -185,9 +196,15 @@ body {
     }
 }
 
+.poster {
+    font-size: 24px;
+    line-height: 1.1;
+}
+
 .desk-items {
-    font-size: 40px;
-    margin-top: 20px;
+    font-size: 20px;
+    line-height: 1.1;
+    margin-top: 10px;
 }
 
 #room {
