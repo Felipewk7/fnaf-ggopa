@@ -960,41 +960,83 @@ body {
 
 /* CAMERA 7: BATHROOMS */
 .bathrooms {
-    background: #151515;
+    background: #0d0d0d;
 }
 
 .tiled-walls {
     width: 100%;
     height: 100%;
-    background:
-        radial-gradient(circle at 50% 50%, rgba(200, 200, 200, 0.05) 1px, transparent 1px);
-    background-size: 40px 40px;
-    border-bottom: 80px solid #050505;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 30px 30px;
+    border-bottom: 120px solid #050505;
 }
 
 .stall-doors {
     position: absolute;
-    bottom: 80px;
+    bottom: 120px;
     width: 100%;
-    height: 160px;
+    height: 200px;
     display: flex;
     justify-content: space-around;
-    padding: 0 50px;
+    padding: 0 40px;
 }
 
 .stall-doors::before,
 .stall-doors::after {
     content: '';
-    width: 120px;
+    width: 110px;
     height: 100%;
-    background: #111;
-    border: 3px solid #222;
-    box-shadow: 5px 5px 20px #000;
+    background: linear-gradient(to right, #111, #080808);
+    border: 2px solid #222;
+    box-shadow: 10px 10px 30px #000;
+}
+
+.mirror-distorted {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    height: 100px;
+    background: linear-gradient(45deg, #1a1a1a, #333, #1a1a1a);
+    border: 5px solid #111;
+    opacity: 0.6;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    animation: mirror-glitch 4s infinite;
+}
+
+@keyframes mirror-glitch {
+
+    0%,
+    90%,
+    100% {
+        filter: contrast(1);
+    }
+
+    92% {
+        filter: contrast(5) invert(1);
+    }
+
+    95% {
+        filter: hue-rotate(90deg);
+    }
 }
 
 /* CAMERA 8: DINING AREA */
 .dining {
-    background: #080808;
+    background: #050505;
+}
+
+.dining-checkered-floor {
+    position: absolute;
+    bottom: 0;
+    width: 200%;
+    height: 60%;
+    left: -50%;
+    background: repeating-conic-gradient(#000 0% 25%, #111 0% 50%) 50% / 100px 100px;
+    transform: perspective(500px) rotateX(65deg);
+    z-index: 1;
+    opacity: 0.5;
 }
 
 .party-tables {
@@ -1003,61 +1045,138 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding-top: 100px;
+    padding-top: 150px;
+    z-index: 2;
+    position: relative;
 }
 
 .table-set {
-    width: 150px;
-    height: 60px;
-    background: #1a1a1a;
+    width: 140px;
+    height: 70px;
+    background: #151515;
     border-radius: 50%;
-    border-top: 10px solid #222;
+    border-top: 15px solid #f00;
+    /* Toalha vermelha */
     position: relative;
-    box-shadow: 0 20px 40px #000;
+    box-shadow: 0 30px 50px #000;
 }
 
-.table-set::after {
-    content: '▲';
+.table-set::before {
+    /* Table base */
+    content: '';
     position: absolute;
-    top: -20px;
+    bottom: -80px;
     left: 50%;
     transform: translateX(-50%);
-    color: #ffcc00;
-    font-size: 20px;
+    width: 40px;
+    height: 80px;
+    background: #080808;
 }
 
-.party-banners-dining {
+.balloons {
     position: absolute;
-    top: 10px;
+    top: 100px;
+    left: 10%;
     width: 100%;
-    height: 30px;
-    background: repeating-linear-gradient(90deg, #f00 0, #f00 20px, #00f 20px, #00f 40px);
-    opacity: 0.15;
+    height: 100px;
+    z-index: 3;
+}
+
+.balloons::before,
+.balloons::after {
+    content: '🎈';
+    font-size: 40px;
+    position: absolute;
+    opacity: 0.4;
+}
+
+.balloons::after {
+    left: 80%;
+    top: -20px;
+    color: #00f;
 }
 
 /* CAMERA 4B: CORNER WEST */
 .corner-west {
-    background: #020202;
+    background: #010101;
 }
 
 .wall-posters {
     position: absolute;
-    top: 50px;
-    left: 60px;
-    width: 120px;
-    height: 160px;
-    background: #111;
-    border: 5px solid #050505;
+    top: 60px;
+    left: 40px;
+    width: 100px;
+    height: 130px;
+    background: #080808;
+    border: 4px solid #111;
     box-shadow: inset 0 0 20px #000;
+}
+
+.creepy-poster {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 220px;
+    background: #050505;
+    border: 10px solid #0a0a0a;
+    box-shadow: 0 0 40px #000;
 }
 
 .hanging-wires-cam {
     position: absolute;
     top: 0;
-    right: 20%;
+    right: 15%;
     width: 2px;
-    height: 150px;
+    height: 200px;
     background: #111;
+    box-shadow: 2px 0 5px #000;
+}
+
+.corner-trash {
+    position: absolute;
+    bottom: 20px;
+    right: 40px;
+    width: 80px;
+    height: 50px;
+    background: #0a0a0a;
+    border-radius: 5px;
+    box-shadow: 10px 10px 20px #000;
+}
+
+/* CAMERA 5B: CORNER EAST */
+.corner-east {
+    background: #020202;
+}
+
+.rules-poster {
+    position: absolute;
+    top: 40px;
+    right: 60px;
+    width: 150px;
+    height: 200px;
+    background: #0a0a0a;
+    border: 5px solid #151515;
+    box-shadow: 5px 5px 15px #000;
+}
+
+.rules-poster::before {
+    content: "RULES FOR SAFETY:\n1. Don't run\n2. Don't scream\n3. Don't poop on floor\n4. Stay close to mom\n5. Don't touch Freddy";
+    white-space: pre-wrap;
+    color: #666;
+    font-size: 10px;
+    padding: 10px;
+    display: block;
+}
+
+.corner-wires {
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    width: 4px;
+    height: 100%;
+    background: #080808;
 }
 
 #win-screen h1 {
