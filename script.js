@@ -85,10 +85,12 @@ function showScreen(id) {
         screens[id].style.display = (id === 'office' || id === 'camera-system') ? 'block' : 'flex';
     }
 
-    // Garante que HUD e Gatilho do Monitor sempre apareçam no escritório ou câmeras
+    // Garante que HUD e Gatilho do Monitor sempre apareçam no escritório ou câmeras (se houver energia)
     const hudEl = document.getElementById('hud');
     const trigger = document.getElementById('monitor-toggle');
-    if (id === 'office' || id === 'camera-system') {
+    const isWorking = (id === 'office' || id === 'camera-system') && !powerOut;
+
+    if (isWorking) {
         if (hudEl) hudEl.style.display = 'block';
         if (trigger) trigger.style.display = 'flex';
     } else {
@@ -97,17 +99,32 @@ function showScreen(id) {
     }
 }
 
-function playSound(s, loop = false, vol = 1) {
+const soundTimeouts = {};
+
+function playSound(s, loop = false, vol = 1, duration = 0) {
     const audio = sounds[s];
     if (audio) {
+        // Limpa timeout anterior se houver para este som (evita cortes prematuros)
+        if (soundTimeouts[s]) {
+            clearTimeout(soundTimeouts[s]);
+            delete soundTimeouts[s];
+        }
+
         audio.loop = loop;
         audio.volume = vol;
         if (!loop) audio.currentTime = 0;
+
         audio.play()
-            .then(() => console.log("Áudio tocando:", s))
+            .then(() => {
+                if (duration > 0) {
+                    soundTimeouts[s] = setTimeout(() => {
+                        if (audio.loop) return;
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }, duration);
+                }
+            })
             .catch(e => console.warn("Áudio bloqueado:", s, e));
-    } else {
-        console.warn("Dicionário de som não contém:", s);
     }
 }
 
@@ -115,6 +132,10 @@ function stopSound(s) {
     if (sounds[s]) {
         sounds[s].pause();
         sounds[s].currentTime = 0;
+        if (soundTimeouts[s]) {
+            clearTimeout(soundTimeouts[s]);
+            delete soundTimeouts[s];
+        }
     }
 }
 
@@ -294,7 +315,6 @@ function toggleDoor(side) {
 
 function toggleLight(side) {
     if (powerOut) return;
-    playSound('light');
     if (side === 'left') {
         isLeftLightOn = !isLeftLightOn;
         document.getElementById('hallway-left').classList.toggle('lit', isLeftLightOn);
@@ -304,18 +324,26 @@ function toggleLight(side) {
         document.getElementById('hallway-right').classList.toggle('lit', isRightLightOn);
         document.getElementById('btn-light-right').classList.toggle('active', isRightLightOn);
     }
+
+    // Gerencia som da luz em loop
+    if (isLeftLightOn || isRightLightOn) playSound('light', true, 0.4);
+    else stopSound('light');
+
     renderDoorVisual(side);
     updateUsage();
 }
 
 function toggleMonitor() {
-    if (powerOut) return;
-    playSound('monitor');
+    // Permite fechar (isMonitorOpen true) mesmo sem energia, mas não permite abrir
+    if (powerOut && !isMonitorOpen) return;
+
     isMonitorOpen = !isMonitorOpen;
     if (isMonitorOpen) {
+        playSound('monitor', false, 1, 1000); // Toca por 1s
         showScreen('camera-system');
         switchCamera(currentCam);
     } else {
+        playSound('monitor', false, 1, 1000); // Toca por 1s
         showScreen('office');
         if (animatronics.Erro.pos === currentCam) triggerJumpscare('Erro');
     }
@@ -324,7 +352,7 @@ function toggleMonitor() {
 
 function switchCamera(id) {
     currentCam = id;
-    playSound('blip');
+    playSound('blip', false, 0.5, 1000); // Toca blip por 1s max
     document.querySelectorAll('.cam-btn').forEach(b => b.classList.toggle('active', b.dataset.cam === id));
     const s = document.getElementById('static-overlay');
     s.classList.add('heavy');
@@ -492,8 +520,15 @@ function triggerPowerOut() {
     stopAllSounds();
     playSound('powerout');
     document.body.classList.add('power-out');
+
+    // Desliga luzes e fecha portas
     isLeftDoorClosed = isRightDoorClosed = isLeftLightOn = isRightLightOn = false;
-    if (isMonitorOpen) toggleMonitor();
+    stopSound('light'); // Garante que o loop da luz pare
+
+    // Fecha o monitor forçadamente
+    isMonitorOpen = false;
+    showScreen('office'); // Isso agora esconde o tablet-toggle pois isWorking será false
+
     document.getElementById('door-left').classList.remove('closed');
     document.getElementById('door-right').classList.remove('closed');
     document.getElementById('btn-door-left').classList.remove('active');
