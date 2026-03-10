@@ -167,6 +167,11 @@ function resetState() {
 function showScreen(id) {
     Object.values(screens).forEach(s => s.classList.remove('active'));
     screens[id].classList.add('active');
+
+    // HUD e Botão do Monitor só aparecem durante a gameplay (escritório ou câmeras)
+    const isGameplay = (id === 'office' || id === 'cams');
+    document.getElementById('hud').style.display = isGameplay ? 'block' : 'none';
+    document.getElementById('monitor-toggle').style.display = isGameplay ? 'flex' : 'none';
 }
 
 function updateTime() {
@@ -349,14 +354,33 @@ function checkAttacks() {
 }
 
 function renderCamView(id) {
-    let html = '';
-    if (id === '2') html = '<div style="font-size:20px">- SEM SINAL -</div>';
-    else if (id === '3') {
+    const roomBackgrounds = {
+        '1': '🎪舞台', // Palco
+        '2': '🍳🔪', // Cozinha (sem sinal)
+        '3': '🌴🏴‍☠️', // Cova
+        '4a': '🧱👣', // Corredor Esq
+        '4b': '🚪🔦', // Canto Esq
+        '5a': '🧱👣', // Corredor Dir
+        '5b': '🚪🔦', // Canto Dir
+        '6': '🛠️📦', // Área de Serviço
+        '7': '🚻🧼', // Banheiros
+        '8': '🍕🎈PARTY' // Salão de Festas
+    };
+
+    let html = `<div class="room-bg" style="position:absolute; opacity:0.3; font-size:100px; z-index:1;">${roomBackgrounds[id] || ''}</div>`;
+
+    if (id === '2') {
+        html = '<div style="font-size:40px; color:#555;">- SEM SINAL VISUAL -<br>🔊 <i>Ruídos de Panelas</i></div>';
+    } else if (id === '3') {
         let s = animatronics.Corredor.state;
-        html = s === 0 ? '🏕️' : (s === 1 ? '🏕️🦊' : '🦊');
-    }
-    for (let k in animatronics) {
-        if (animatronics[k].pos === id && k !== 'Corredor') html += animatronics[k].emoji;
+        let hallway = s === 0 ? '🏕️' : (s === 1 ? '🏕️🦊' : '🦊');
+        html = `<div style="z-index:2; position:relative;">${hallway}</div>` + html;
+    } else {
+        let anims = '';
+        for (let k in animatronics) {
+            if (animatronics[k].pos === id && k !== 'Corredor') anims += animatronics[k].emoji;
+        }
+        html = `<div style="z-index:2; position:relative;">${anims}</div>` + html;
     }
     document.getElementById('animatronics-view').innerHTML = html;
 }

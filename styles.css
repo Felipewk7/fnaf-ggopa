@@ -156,14 +156,38 @@ body {
     height: 100%;
     left: 0;
     transition: left 0.1s ease-out;
-    /* Base para imagem de fundo futura: background-image: url('office_bg.png'); */
-    background:
-        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-        repeating-linear-gradient(45deg, #111 0px, #111 2px, #0a0a0a 2px, #0a0a0a 10px),
-        radial-gradient(circle at 50% 50%, #222 0%, #000 80%);
-    background-size: cover;
+    background: #080808;
+    /* Fundo sólido e limpo */
     border-left: 20px solid #111;
     border-right: 20px solid #111;
+}
+
+.desk {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-size: 60px;
+}
+
+.fan {
+    font-size: 80px;
+    animation: spin 0.1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.desk-items {
+    font-size: 40px;
+    margin-top: 20px;
 }
 
 #room {
