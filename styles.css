@@ -233,62 +233,57 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 10;
+    z-index: 1000;
 }
 
 .desk-surface {
     position: absolute;
-    bottom: -150px;
+    bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
-    width: 900px;
-    height: 350px;
-    background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
-    border-top: 6px solid #333;
-    border-radius: 400px 400px 0 0;
-    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.9);
+    width: 600px;
+    height: 150px;
+    background: #2a2a2a;
+    border: 4px solid #444;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 5px 15px #000;
+    z-index: 500;
 }
 
 .poster-clean {
-    top: -120px;
+    top: 50px;
     left: 50%;
     transform: translateX(-50%);
-    width: 170px;
-    height: 200px;
-    background: #121212;
-    border: 6px solid #222;
-    border-radius: 2px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 180px;
+    height: 220px;
+    background: #151515;
+    border: 5px solid #333;
+    z-index: 100;
 }
 
 .poster-text {
-    font-size: 38px;
-    color: #ff1a1a;
-    text-align: center;
-    line-height: 0.9;
+    font-size: 45px;
+    color: #ff0000;
     font-weight: bold;
-    text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+    text-align: center;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
 }
 
 .monitor-base {
-    bottom: 40px;
-    left: 28%;
-    width: 160px;
-    height: 120px;
-    background: #222;
-    border: 4px solid #111;
-    border-radius: 4px;
-    box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.5);
+    bottom: 150px;
+    left: 35%;
+    width: 140px;
+    height: 110px;
+    background: #111;
+    border: 3px solid #333;
+    z-index: 600;
 }
 
 .monitor-screen {
-    width: 94%;
-    height: 90%;
-    background: #080808;
-    border-radius: 2px;
+    width: 90%;
+    height: 85%;
+    background: #050505;
+    border: 1px solid #222;
     position: relative;
     overflow: hidden;
 }
@@ -297,7 +292,7 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(0, 255, 0, 0.03) 0%, transparent 80%);
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.05) 0%, transparent 80%);
 }
 
 .fan-clean {

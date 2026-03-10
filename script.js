@@ -270,7 +270,8 @@ function switchCamera(id) {
         '7': 'BANHEIROS',
         '8': 'SALÃO DE FESTAS'
     };
-    document.getElementById('cam-name').innerText = `CAM ${id.toUpperCase()} - ${names[id] || '???'}`;
+    // Apenas atualiza o nome no topo se necessário, ou removemos para evitar repetição
+    document.getElementById('cam-name').innerText = `CAM ${id.toUpperCase()}`;
     renderCamView(id);
 }
 
@@ -363,9 +364,9 @@ function renderCamView(id) {
     const roomScenes = {
         '1': '<div class="scene stage"><div class="curtain"></div><div class="floor-checkered"></div></div>',
         '2': '<div class="scene kitchen"><div class="counter"></div><div class="wall-shelf"></div></div>',
-        '3': '<div class="scene cove"><div class="star-curtain"></div><div class="sign">PIRATE COVE</div></div>',
+        '3': '<div class="scene cove"><div class="star-curtain"></div><div class="sign-blank"></div></div>',
         '4a': '<div class="scene hallway-west"><div class="hallway-perspective"></div></div>',
-        '4b': '<div class="scene corner-west"><div class="poster-small"></div></div>',
+        '4b': '<div class="scene corner-west"><div class="poster-decor"></div></div>',
         '5a': '<div class="scene hallway-east"><div class="hallway-perspective"></div></div>',
         '5b': '<div class="scene corner-east"><div class="vent-detail"></div></div>',
         '6': '<div class="scene supply"><div class="shelves"></div><div class="cleaning-cart"></div></div>',
@@ -373,20 +374,23 @@ function renderCamView(id) {
         '8': '<div class="scene dining"><div class="tables-group"></div><div class="party-banners"></div></div>'
     };
 
-    let html = `<div class="cam-scene-container" style="position:absolute; width:100%; height:100%; z-index:1; opacity: 0.8;">${roomScenes[id] || ''}</div>`;
+    // Remove labels e foca na cena
+    let html = `<div class="cam-scene-container" style="position:absolute; width:100%; height:100%; z-index:1; opacity: 1;">${roomScenes[id] || ''}</div>`;
 
     if (id === '2') {
-        html = '<div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:40px; color:#555; text-align:center; width: 100%;">- SEM SINAL VISUAL -<br>🔊 <i>Ruídos de Panelas</i></div>';
+        html = '<div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:40px; color:#555; text-align:center; width: 100%; font-family: monospace;">- SEM SINAL VISUAL -<br>🔊 <i>Cozinha</i></div>';
     } else if (id === '3') {
         let s = animatronics.Corredor.state;
-        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:80px; position:absolute; left: 0; top: 0; transform: translate(-180%, -40%);">🦊</span>' : '<span style="font-size:150px; position:absolute; left: 0; top: 0; transform: translate(-120%, -30%);">🦊</span>');
-        html = `<div style="z-index:2; position:absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">${foxy}</div>` + html;
+        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:100px; position:absolute; left: 50%; top: 50%; transform: translate(-150%, -50%);">🦊</span>' : '<span style="font-size:180px; position:absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">🦊</span>');
+        html = `<div style="z-index:10; position:absolute; width:100%; height:100%; pointer-events:none;">${foxy}</div>` + html;
     } else {
         let anims = '';
         for (let k in animatronics) {
             if (animatronics[k].pos === id && k !== 'Corredor') anims += animatronics[k].emoji;
         }
-        html = `<div style="z-index:2; position:absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); font-size:150px; width:100%; text-align:center;">${anims}</div>` + html;
+        if (anims) {
+            html = `<div style="z-index:10; position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:150px; width:100%; text-align:center; pointer-events:none;">${anims}</div>` + html;
+        }
     }
     document.getElementById('animatronics-view').innerHTML = html;
 }
