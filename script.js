@@ -200,25 +200,35 @@ function init() {
     // SOLUÇÃO PARA O BLOQUEIO DE ÁUDIO DO NAVEGADOR (AUTO-PLAY)
     const unlockOverlay = document.getElementById('audio-unlock-overlay');
     if (unlockOverlay) {
-        unlockOverlay.onclick = () => {
-            console.log("Desbloqueando áudios via interação...");
+        const startAudio = () => {
+            console.log("Desbloqueando áudios...");
+            unlockOverlay.style.pointerEvents = 'none'; // Evita múltiplos cliques
+            unlockOverlay.style.opacity = '0';
+
+            // Tenta dar play em tudo para "acordar" o contexto de áudio
             for (let s in sounds) {
-                let a = sounds[s];
-                a.play().then(() => {
-                    a.pause();
-                    a.currentTime = 0;
-                }).catch(e => { });
+                try {
+                    let a = sounds[s];
+                    a.play().then(() => {
+                        a.pause();
+                        a.currentTime = 0;
+                    }).catch(e => console.warn("Erro ao acordar áudio:", s));
+                } catch (e) { }
             }
 
-            // Inicia a música do menu após o desbloqueio
+            // Inicia a música do menu
             setTimeout(() => {
-                if (sounds.menu.paused) playSound('menu', true, 0.4);
-            }, 300);
+                playSound('menu', true, 0.4);
+            }, 100);
 
-            // Remove o overlay com um leve fade-out
-            unlockOverlay.style.opacity = '0';
-            setTimeout(() => unlockOverlay.remove(), 500);
+            // Remove o overlay após o fade
+            setTimeout(() => {
+                if (unlockOverlay.parentNode) unlockOverlay.remove();
+            }, 600);
         };
+
+        unlockOverlay.addEventListener('click', startAudio);
+        unlockOverlay.addEventListener('touchstart', startAudio); // Suporte para mobile
     }
 }
 
