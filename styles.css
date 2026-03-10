@@ -165,7 +165,8 @@ body {
 .desk {
     position: relative;
     width: 600px;
-    height: 500px;
+    height: 600px;
+    margin-top: 50px;
 }
 
 .ascii-art {
@@ -173,6 +174,7 @@ body {
     font-family: 'VT323', monospace;
     color: #ccc;
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    pointer-events: none;
 }
 
 .ascii-art pre {
@@ -184,40 +186,55 @@ body {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 28px;
+    font-size: 22px;
     line-height: 1.1;
-    color: #888;
-    text-align: center;
+    color: #444;
+    /* Darker, like it's on the wall */
 }
 
 .fan {
     position: absolute;
-    top: 220px;
+    top: 200px;
     left: 50%;
     transform: translateX(-50%);
     font-size: 35px;
     line-height: 0.9;
-    animation: spin 0.2s linear infinite;
+    z-index: 10;
+}
+
+/* Specific rotation for the fan content */
+.fan pre {
+    animation: spin 0.15s linear infinite;
 }
 
 @keyframes spin {
     from {
-        transform: translate(-50%, 0) rotate(0deg);
+        transform: rotate(0deg);
     }
 
     to {
-        transform: translate(-50%, 0) rotate(360deg);
+        transform: rotate(360deg);
     }
 }
 
 .desk-items {
     position: absolute;
-    bottom: 20px;
+    bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 28px;
+    font-size: 24px;
     line-height: 1.1;
-    text-align: center;
+    color: #888;
+}
+
+#cam-name {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    font-size: 32px;
+    color: #fff;
+    z-index: 2000;
+    /* Keep it above everything */
 }
 
 #room {

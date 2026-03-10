@@ -373,14 +373,15 @@ function renderCamView(id) {
         html = '<div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:40px; color:#555; text-align:center; width: 100%;">- SEM SINAL VISUAL -<br>🔊 <i>Ruídos de Panelas</i></div>';
     } else if (id === '3') {
         let s = animatronics.Corredor.state;
-        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:80px; position:absolute; left: 0; top: 0; transform: translate(-150%, -50%);">🦊</span>' : '<span style="font-size:150px; position:absolute; left: 0; top: 0; transform: translate(-100%, -50%);">🦊</span>');
-        html = `<div style="z-index:2; position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">${foxy}</div>` + html;
+        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:80px; position:absolute; left: 0; top: 0; transform: translate(-180%, -40%);">🦊</span>' : '<span style="font-size:150px; position:absolute; left: 0; top: 0; transform: translate(-120%, -30%);">🦊</span>');
+        html = `<div style="z-index:2; position:absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);">${foxy}</div>` + html;
     } else {
         let anims = '';
         for (let k in animatronics) {
             if (animatronics[k].pos === id && k !== 'Corredor') anims += animatronics[k].emoji;
         }
-        html = `<div style="z-index:2; position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:150px; width:100%; text-align:center;">${anims}</div>` + html;
+        // Centraliza os emojis um pouco abaixo do meio para nao bater no nome da camera
+        html = `<div style="z-index:2; position:absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); font-size:150px; width:100%; text-align:center;">${anims}</div>` + html;
     }
     document.getElementById('animatronics-view').innerHTML = html;
 }
