@@ -24,12 +24,12 @@ let aiTick = null;
 const animatronics = {
     // Níveis de IA para [Noite 1, 2, 3, 4, 5, Custom(6)]
     // --- ONDE ALTERAR AS IMAGENS ---
-    // Substitua os caminhos abaixo pelos nomes dos seus arquivos de imagem na pasta assets/images/
-    "Coelho": { name: "O Coelho", img: './assets/images/coelho.png.png', emoji: '🐰', pos: '1', ai: [0, 1, 3, 6, 12, 18], route: ['1', '8', '6', '4a', '4b', 'office'] },
-    "Ave": { name: "A Ave", img: './assets/images/ave.png.png', emoji: '🐥', pos: '1', ai: [0, 1, 2, 5, 10, 15], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
-    "Corredor": { name: "O Corredor", img: './assets/images/corredor.png.png', emoji: '🦊', pos: '3', ai: [0, 0, 1, 3, 6, 10], state: 0 },
-    "Observador": { name: "O Observador", img: './assets/images/observador.png.png', emoji: '🐻', pos: '1', ai: [0, 0, 0, 2, 5, 10], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
-    "Erro": { name: "O Erro", img: './assets/images/lagosta.png.jpeg', emoji: '🦞', pos: 'hidden', ai: [0, 0, 0, 0, 1, 3] }
+    // Removido o "./" do início do caminho para melhorar compatibilidade
+    "Coelho": { name: "O Coelho", img: 'assets/images/coelho.png.png', emoji: '🐰', pos: '1', ai: [0, 1, 3, 6, 12, 18], route: ['1', '8', '6', '4a', '4b', 'office'] },
+    "Ave": { name: "A Ave", img: 'assets/images/ave.png.png', emoji: '🐥', pos: '1', ai: [0, 1, 2, 5, 10, 15], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
+    "Corredor": { name: "O Corredor", img: 'assets/images/corredor.png.png', emoji: '🦊', pos: '3', ai: [0, 0, 1, 3, 6, 10], state: 0 },
+    "Observador": { name: "O Observador", img: 'assets/images/observador.png.png', emoji: '🐻', pos: '1', ai: [0, 0, 0, 2, 5, 10], route: ['1', '8', '7', '2', '5a', '5b', 'office'] },
+    "Erro": { name: "O Erro", img: 'assets/images/lagosta.png.jpeg', emoji: '🦞', pos: 'hidden', ai: [0, 0, 0, 0, 1, 3] }
 };
 
 let attackInNextTick = { Coelho: false, Ave: false, Observador: false };
@@ -543,11 +543,13 @@ function renderCamView(id) {
             let anims = '';
             for (let k in animatronics) {
                 if (animatronics[k].pos === id && k !== 'Corredor') {
-                    anims += `<img src="${animatronics[k].img}" style="height: 250px; margin: 0 10px;">`;
+                    const imgPath = animatronics[k].img;
+                    console.log(`Carregando ${k} na CAM ${id}: ${imgPath}`);
+                    anims += `<img src="${imgPath}" style="height: 350px; margin: 0 10px; z-index:100;" onerror="console.error('Falha ao carregar:', '${imgPath}'); this.onerror=null; this.outerHTML='<span style=\\'font-size:150px\\'>${animatronics[k].emoji}</span>';">`;
                 }
             }
             if (anims) {
-                html = `<div style="z-index:10; position:absolute; top: 70%; left: 50%; transform: translate(-50%, -50%); display:flex; justify-content:center; align-items:center; width:100%; pointer-events:none;">${anims}</div>` + html;
+                html = `<div style="z-index:20; position:absolute; top: 65%; left: 50%; transform: translate(-50%, -50%); display:flex; justify-content:center; align-items:center; width:100%; pointer-events:none;">${anims}</div>` + html;
             }
         }
     }
@@ -557,14 +559,18 @@ function renderCamView(id) {
 function renderDoorVisual(side) {
     const el = document.getElementById(side === 'left' ? 'hallway-left' : 'hallway-right');
     const isLit = side === 'left' ? isLeftLightOn : isRightLightOn;
-    let foundImg = '';
+    let found = null;
     if (isLit) {
-        if (side === 'left' && animatronics.Coelho.pos === '4b') foundImg = animatronics.Coelho.img;
+        if (side === 'left' && animatronics.Coelho.pos === '4b') found = animatronics.Coelho;
         if (side === 'right' && (animatronics.Ave.pos === '5b' || animatronics.Observador.pos === '5b')) {
-            foundImg = animatronics.Ave.pos === '5b' ? animatronics.Ave.img : animatronics.Observador.img;
+            found = animatronics.Ave.pos === '5b' ? animatronics.Ave : animatronics.Observador;
         }
     }
-    el.innerHTML = foundImg ? `<img src="${foundImg}" style="height: 350px;">` : '';
+    if (found) {
+        el.innerHTML = `<img src="${found.img}" style="height: 400px;" onerror="this.outerHTML='<span>${found.emoji}</span>'">`;
+    } else {
+        el.innerHTML = '';
+    }
 }
 
 function triggerPowerOut() {
