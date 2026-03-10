@@ -58,6 +58,32 @@ const sounds = {
     powerout: new Audio('https://www.soundjay.com/mechanical/sounds/power-off-1.mp3')
 };
 
+function showScreen(id) {
+    // Esconde todas as telas
+    for (let k in screens) {
+        if (screens[k]) {
+            screens[k].classList.remove('active');
+            screens[k].style.display = 'none';
+        }
+    }
+    // Mostra a tela atual
+    if (screens[id]) {
+        screens[id].classList.add('active');
+        screens[id].style.display = (id === 'office' || id === 'camera-system') ? 'block' : 'flex';
+    }
+
+    // Garante que HUD e Gatilho do Monitor sempre apareçam no escritório ou câmeras
+    const hudEl = document.getElementById('hud');
+    const trigger = document.getElementById('monitor-toggle');
+    if (id === 'office' || id === 'camera-system') {
+        if (hudEl) hudEl.style.display = 'block';
+        if (trigger) trigger.style.display = 'flex';
+    } else {
+        if (hudEl) hudEl.style.display = 'none';
+        if (trigger) trigger.style.display = 'none';
+    }
+}
+
 function playSound(s) {
     if (sounds[s]) {
         sounds[s].currentTime = 0;
@@ -164,15 +190,7 @@ function resetState() {
     updateUsage();
 }
 
-function showScreen(id) {
-    Object.values(screens).forEach(s => s.classList.remove('active'));
-    screens[id].classList.add('active');
 
-    // HUD e Botão do Monitor só aparecem durante a gameplay (escritório ou câmeras)
-    const isGameplay = (id === 'office' || id === 'camera-system');
-    document.getElementById('hud').style.display = isGameplay ? 'block' : 'none';
-    document.getElementById('monitor-toggle').style.display = isGameplay ? 'flex' : 'none';
-}
 
 function updateTime() {
     timeHour++;
@@ -365,12 +383,12 @@ function renderCamView(id) {
         '2': '<div class="scene kitchen"><div class="counter"></div><div class="wall-shelf"></div></div>',
         '3': '<div class="scene cove"><div class="star-curtain"></div><div class="sign-blank"></div></div>',
         '4a': '<div class="scene hallway-west"><div class="hallway-perspective"></div></div>',
-        '4b': '<div class="scene corner-west"><div class="wall-posters"></div><div class="creepy-poster"></div><div class="hanging-wires-cam"></div><div class="corner-trash"></div></div>',
+        '4b': '<div class="scene corner-west"><div class="wall-posters"></div><div class="creepy-poster"></div><div class="hanging-wires-cam"></div><div class="corner-trash"></div><div style="position:absolute; bottom:10px; left:10px; color:red; font-size:12px; opacity:0.5;">SINAL REFORÇADO v2</div></div>',
         '5a': '<div class="scene hallway-east"><div class="hallway-perspective"></div></div>',
         '5b': '<div class="scene corner-east"><div class="vent-detail"></div><div class="rules-poster"></div><div class="corner-wires"></div></div>',
         '6': '<div class="scene supply"><div class="storage-racks"></div><div class="cleaning-bucket"></div><div class="mop"></div></div>',
         '7': '<div class="scene bathrooms"><div class="tiled-walls"></div><div class="stall-doors"></div><div class="mirror-distorted"></div><div class="sinks-area"></div></div>',
-        '8': '<div class="scene dining"><div class="dining-checkered-floor"></div><div class="party-tables"><div class="table-set"></div><div class="table-set"></div><div class="table-set"></div></div><div class="balloons"></div><div class="party-banners-dining"></div></div>'
+        '8': '<div class="scene dining"><div class="dining-checkered-floor"></div><div class="party-tables"><div class="table-set"></div><div class="table-set"></div><div class="table-set"></div></div><div class="balloons"></div><div class="party-banners-dining"></div><div style="position:absolute; bottom:10px; left:10px; color:red; font-size:12px; opacity:0.5;">SINAL REFORÇADO v2</div></div>'
     };
 
     // Remove labels e foca na cena
