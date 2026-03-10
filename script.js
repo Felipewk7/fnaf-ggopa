@@ -51,11 +51,15 @@ const hud = {
 
 // --- SOUNDS ---
 const sounds = {
-    door: new Audio('https://www.soundjay.com/nature/sounds/iron-gate-close-1.mp3'),
-    light: new Audio('https://www.soundjay.com/buttons/sounds/button-20.mp3'),
-    monitor: new Audio('https://www.soundjay.com/buttons/sounds/button-29.mp3'),
-    jumpscare: new Audio('https://www.soundjay.com/creatures/sounds/zombie-growl-3.mp3'),
-    powerout: new Audio('https://www.soundjay.com/mechanical/sounds/power-off-1.mp3')
+    menu: new Audio('assets/sounds/menu.mp3'),
+    ambience: new Audio('assets/sounds/ambience.mp3'),
+    kitchen: new Audio('assets/sounds/kitchen.mp3'),
+    door: new Audio('assets/sounds/door.mp3'),
+    light: new Audio('assets/sounds/light.mp3'),
+    monitor: new Audio('assets/sounds/monitor.mp3'),
+    powerout: new Audio('assets/sounds/powerout.mp3'),
+    jumpscare: new Audio('assets/sounds/jumpscare.mp3'),
+    blip: new Audio('assets/sounds/blip.mp3')
 };
 
 function showScreen(id) {
@@ -84,11 +88,24 @@ function showScreen(id) {
     }
 }
 
-function playSound(s) {
+function playSound(s, loop = false, volume = 1) {
     if (sounds[s]) {
-        sounds[s].currentTime = 0;
+        sounds[s].loop = loop;
+        sounds[s].volume = volume;
+        if (!loop) sounds[s].currentTime = 0;
         sounds[s].play().catch(() => { });
     }
+}
+
+function stopSound(s) {
+    if (sounds[s]) {
+        sounds[s].pause();
+        sounds[s].currentTime = 0;
+    }
+}
+
+function stopAllSounds() {
+    for (let s in sounds) stopSound(s);
 }
 
 // --- INIT ---
@@ -137,12 +154,15 @@ function init() {
     });
 
     showScreen('menu');
+    playSound('menu', true, 0.5);
 }
 
 function startGame(night) {
     currentNight = night;
     resetState();
     showScreen('office');
+    stopSound('menu');
+    playSound('ambience', true, 0.3);
     gameTick = setInterval(updateTime, GAME_HOUR_MS);
     energyTick = setInterval(updateEnergy, 1000);
     aiTick = setInterval(updateAI, 5000);
@@ -228,6 +248,7 @@ function updateUsage() {
 function toggleDoor(side) {
     if (powerOut) return;
     playSound('door');
+    playSound('door');
     if (side === 'left') {
         isLeftDoorClosed = !isLeftDoorClosed;
         document.getElementById('door-left').classList.toggle('closed', isLeftDoorClosed);
@@ -242,6 +263,7 @@ function toggleDoor(side) {
 
 function toggleLight(side) {
     if (powerOut) return;
+    playSound('light');
     playSound('light');
     if (side === 'left') {
         isLeftLightOn = !isLeftLightOn;
@@ -272,6 +294,7 @@ function toggleMonitor() {
 
 function switchCamera(id) {
     currentCam = id;
+    playSound('blip');
     document.querySelectorAll('.cam-btn').forEach(b => b.classList.toggle('active', b.dataset.cam === id));
     const s = document.getElementById('static-overlay');
     s.classList.add('heavy');
@@ -394,21 +417,28 @@ function renderCamView(id) {
     // Remove labels e foca na cena
     let html = `<div class="cam-scene-container" style="position:absolute; width:100%; height:100%; z-index:1;">${roomScenes[id] || ''}</div>`;
 
+    // Áudio da Cozinha (CAM 2)
     if (id === '2') {
+        let isSomeoneInKitchen = (animatronics.Ave.pos === '2' || animatronics.Observador.pos === '2');
+        if (isSomeoneInKitchen) playSound('kitchen', true, 0.6);
+        else stopSound('kitchen');
+
         html = '<div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:40px; color:#555; text-align:center; width: 100%; font-family: monospace;">- SEM SINAL VISUAL -<br>🔊 <i>Cozinha</i></div>';
-    } else if (id === '3') {
-        let s = animatronics.Corredor.state;
-        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:100px; position:absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); z-index:60;">🦊</span>' : (s === 2 ? '<span style="font-size:150px; position:absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); z-index:60;">🦊</span>' : '<span style="font-size:180px; position:absolute; left: 50%; top: 70%; transform: translate(-50%, -50%); z-index:60;">🦊</span>'));
-        // Adiciona a classe de estado à cena para o CSS das cortinas (USANDO A NOVA CLASSE ROBUSTA)
-        html = `<div class="cove-scene-wrapper state-${s}" style="position:absolute; width:100%; height:100%; z-index:10;">${roomScenes[id] || ''}</div>`;
-        html = `<div style="z-index:70; position:absolute; width:100%; height:100%; pointer-events:none;">${foxy}</div>` + html;
     } else {
-        let anims = '';
-        for (let k in animatronics) {
-            if (animatronics[k].pos === id && k !== 'Corredor') anims += animatronics[k].emoji;
-        }
-        if (anims) {
-            html = `<div style="z-index:10; position:absolute; top: 70%; left: 50%; transform: translate(-50%, -50%); font-size:150px; width:100%; text-align:center; pointer-events:none;">${anims}</div>` + html;
+        stopSound('kitchen'); // Para o som se mudar de câmera
+        if (id === '3') {
+            let s = animatronics.Corredor.state;
+            let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:100px; position:absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); z-index:60;">🦊</span>' : (s === 2 ? '<span style="font-size:150px; position:absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); z-index:60;">🦊</span>' : '<span style="font-size:180px; position:absolute; left: 50%; top: 70%; transform: translate(-50%, -50%); z-index:60;">🦊</span>'));
+            html = `<div class="cove-scene-wrapper state-${s}" style="position:absolute; width:100%; height:100%; z-index:10;">${roomScenes[id] || ''}</div>`;
+            html = `<div style="z-index:70; position:absolute; width:100%; height:100%; pointer-events:none;">${foxy}</div>` + html;
+        } else {
+            let anims = '';
+            for (let k in animatronics) {
+                if (animatronics[k].pos === id && k !== 'Corredor') anims += animatronics[k].emoji;
+            }
+            if (anims) {
+                html = `<div style="z-index:10; position:absolute; top: 70%; left: 50%; transform: translate(-50%, -50%); font-size:150px; width:100%; text-align:center; pointer-events:none;">${anims}</div>` + html;
+            }
         }
     }
     document.getElementById('animatronics-view').innerHTML = html;
@@ -429,6 +459,7 @@ function renderDoorVisual(side) {
 
 function triggerPowerOut() {
     powerOut = true;
+    stopAllSounds();
     playSound('powerout');
     document.body.classList.add('power-out');
     isLeftDoorClosed = isRightDoorClosed = isLeftLightOn = isRightLightOn = false;
@@ -449,6 +480,7 @@ function triggerPowerOut() {
 
 function triggerJumpscare(key) {
     if (gameTick) clearInterval(gameTick); if (energyTick) clearInterval(energyTick); if (aiTick) clearInterval(aiTick);
+    stopAllSounds();
     playSound('jumpscare');
     showScreen('jumpscare');
     document.getElementById('jumpscare-img').innerText = animatronics[key].emoji;
