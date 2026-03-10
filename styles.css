@@ -46,14 +46,18 @@ body {
     display: block !important;
 }
 
-/* Explicit specificity for ID-based screens */
-#main-menu,
-#office,
-#camera-system,
-#jumpscare,
-#game-over,
-#win-screen {
-    display: none !important;
+/* Explicit visibility logic for screens */
+#main-menu.active,
+#game-over.active,
+#win-screen.active,
+#victory-screen.active,
+#jumpscare.active {
+    display: flex !important;
+}
+
+#office.active,
+#camera-system.active {
+    display: block !important;
 }
 
 #main-menu {
@@ -62,24 +66,10 @@ body {
     align-items: center;
     background-color: #000;
     background-image: url('./assets/menu_bg.jpg');
-    /* VOCÊ PODE TROCAR ESSA IMAGEM */
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
     z-index: 1000;
-}
-
-#office.active {
-    display: block !important;
-}
-
-#camera-system.active {
-    display: block !important;
-}
-
-#game-over.active,
-#win-screen.active,
-#jumpscare.active {
-    display: flex !important;
 }
 
 /* HUD - MUST BE ALWAYS VISIBLE */
@@ -616,7 +606,6 @@ body {
     z-index: 20000;
     transform: translateY(100%);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex !important;
     /* Mudei para flex para centralizar elementos */
 }
 
