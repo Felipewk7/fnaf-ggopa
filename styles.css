@@ -832,6 +832,10 @@ body {
     color: #fff;
     text-align: center;
     z-index: 50000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .victory-content {
