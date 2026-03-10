@@ -39,14 +39,11 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    display: none;
+    display: none !important;
+    /* Esconde TUDO por padrão */
 }
 
-.screen.active {
-    display: block;
-}
-
-/* Fullscreen Overlays (Centered) */
+/* Forçar visibilidade apenas quando .active estiver presente */
 #main-menu.active,
 #game-over.active,
 #win-screen.active,
@@ -57,7 +54,6 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    z-index: 50000;
 }
 
 #office.active,
@@ -71,12 +67,8 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    padding: 0;
-    margin: 0;
-}
-
-#main-menu.active {
-    display: flex !important;
+    z-index: 10000;
+    /* Menu deve estar no topo ao iniciar */
 }
 
 /* HUD - MUST BE ALWAYS VISIBLE */
@@ -771,7 +763,7 @@ body {
 #win-screen,
 #victory-screen {
     background: #000;
-    z-index: 50000;
+    z-index: 5000;
 }
 
 #jumpscare {
