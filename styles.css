@@ -176,10 +176,48 @@ body {
     height: 100%;
     left: 0;
     transition: left 0.1s ease-out;
-    background: #080808;
-    /* Fundo sólido e limpo */
-    border-left: 20px solid #111;
-    border-right: 20px solid #111;
+    background: linear-gradient(to bottom, #111 0%, #080808 70%, #050505 100%);
+    border-left: 20px solid #1a1a1a;
+    border-right: 20px solid #1a1a1a;
+    box-shadow: inset 0 0 100px #000;
+}
+
+.office-bg-details {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.wall-pipe {
+    position: absolute;
+    background: linear-gradient(to bottom, #222, #444, #222);
+    border: 2px solid #111;
+}
+
+.wall-pipe.horizontal {
+    top: 15%;
+    left: 0;
+    width: 100%;
+    height: 30px;
+}
+
+.wall-pipe.vertical {
+    top: 0;
+    left: 10%;
+    width: 25px;
+    height: 100%;
+}
+
+.hanging-wires {
+    position: absolute;
+    top: 0;
+    left: 70%;
+    width: 50px;
+    height: 200px;
+    background-image: repeating-linear-gradient(90deg, #111 0, #111 2px, transparent 2px, transparent 10px);
+    opacity: 0.6;
 }
 
 .desk {
@@ -195,35 +233,98 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    z-index: 10;
+}
+
+.desk-surface {
+    position: absolute;
+    bottom: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 350px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #111 100%);
+    border-top: 6px solid #333;
+    border-radius: 400px 400px 0 0;
+    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.9);
 }
 
 .poster-clean {
-    top: 20px;
+    top: -120px;
     left: 50%;
     transform: translateX(-50%);
-    width: 200px;
-    height: 250px;
-    background: #1a1a1a;
-    border: 10px solid #333;
-    border-radius: 5px;
-    box-shadow: inset 0 0 20px #000, 5px 5px 15px rgba(0, 0, 0, 0.5);
+    width: 170px;
+    height: 200px;
+    background: #121212;
+    border: 6px solid #222;
+    border-radius: 2px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .poster-text {
-    font-size: 40px;
+    font-size: 38px;
     color: #ff1a1a;
     text-align: center;
-    line-height: 1;
+    line-height: 0.9;
     font-weight: bold;
-    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+}
+
+.monitor-base {
+    bottom: 40px;
+    left: 28%;
+    width: 160px;
+    height: 120px;
+    background: #222;
+    border: 4px solid #111;
+    border-radius: 4px;
+    box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.monitor-screen {
+    width: 94%;
+    height: 90%;
+    background: #080808;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.monitor-glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.03) 0%, transparent 80%);
 }
 
 .fan-clean {
-    top: 280px;
+    bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
+}
+
+.fan-base {
+    position: absolute;
+    bottom: -45px;
+    width: 45px;
+    height: 50px;
+    background: #1a1a1a;
+    border-radius: 8px 8px 2px 2px;
+    border: 2px solid #333;
+}
+
+.fan-head {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .fan-blades {
@@ -236,11 +337,58 @@ body {
 
 .fan-center {
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: 18px;
+    height: 18px;
     background: #444;
     border-radius: 50%;
     border: 2px solid #222;
+}
+
+.phone-props {
+    bottom: 50px;
+    right: 25%;
+    width: 90px;
+    height: 70px;
+}
+
+.phone-body {
+    width: 60px;
+    height: 45px;
+    background: #151515;
+    border-radius: 4px;
+    border: 2px solid #333;
+}
+
+.phone-receiver {
+    position: absolute;
+    top: -5px;
+    width: 75px;
+    height: 18px;
+    background: #202020;
+    border-radius: 12px;
+    border: 2px solid #333;
+}
+
+.desk-clutter {
+    bottom: 30px;
+    left: 18%;
+    flex-direction: row !important;
+    gap: 15px;
+}
+
+.paper-stack {
+    width: 45px;
+    height: 12px;
+    background: #222;
+    box-shadow: 0 -2px 0 #333, 0 -4px 0 #222, 0 -6px 0 #333;
+}
+
+.cup {
+    width: 22px;
+    height: 38px;
+    background: #1a1a1a;
+    border-radius: 0 0 6px 6px;
+    border-top: 3px solid #000;
 }
 
 @keyframes spin {
@@ -251,26 +399,6 @@ body {
     to {
         transform: rotate(360deg);
     }
-}
-
-.desk-labels {
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 500px;
-    flex-direction: row;
-    justify-content: space-around;
-    gap: 20px;
-}
-
-.label-item {
-    background: #222;
-    padding: 5px 15px;
-    border-radius: 3px;
-    border: 1px solid #444;
-    font-size: 20px;
-    color: #888;
-    text-shadow: 0 0 5px #000;
 }
 
 #cam-name {
@@ -673,6 +801,90 @@ body {
         transform: scale(1.2);
         filter: brightness(2) drop-shadow(0 0 20px #fff);
     }
+}
+
+/* CAMERA SCENES STYLING */
+.scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #0a0a0a;
+}
+
+.floor-checkered {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40%;
+    background-image:
+        linear-gradient(45deg, #111 25%, transparent 25%),
+        linear-gradient(-45deg, #111 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #111 75%),
+        linear-gradient(-45deg, transparent 75%, #111 75%);
+    background-size: 40px 40px;
+    background-position: 0 0, 0 20px, 20px 20px, 20px 0;
+}
+
+.curtain {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 80%;
+    background: repeating-linear-gradient(90deg, #600 0, #600 30px, #400 30px, #400 40px);
+    border-bottom: 5px solid #200;
+}
+
+.kitchen .counter {
+    position: absolute;
+    bottom: 10%;
+    width: 80%;
+    height: 40px;
+    background: #333;
+    left: 10%;
+    border-top: 5px solid #555;
+}
+
+.star-curtain {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    background-image: radial-gradient(white, rgba(255, 255, 255, .2) 2px, transparent 40px);
+    background-size: 100px 100px;
+    border-left: 20px solid #500;
+    border-right: 20px solid #500;
+}
+
+.cove .sign {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2a1a0a;
+    color: #ffd700;
+    padding: 10px 20px;
+    border: 3px solid #1a0a00;
+    font-size: 24px;
+    white-space: nowrap;
+}
+
+.hallway-perspective {
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(to right, #000 0%, transparent 10%, transparent 90%, #000 100%),
+        linear-gradient(to top, #050505 0%, #111 100%);
+}
+
+.tables-group {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle, #333 10px, transparent 11px);
+    background-size: 100px 100px;
+    background-position: 50px 50px;
+    opacity: 0.5;
 }
 
 #win-screen h1 {
