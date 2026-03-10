@@ -367,20 +367,20 @@ function renderCamView(id) {
         '8': '    _ \n   / \\ \n  |___| \n   | |  \n __|_|__'
     };
 
-    let html = `<pre class="room-bg ascii-art" style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity:0.4; z-index:1; font-size:35px; line-height:1.2; color:#fff; margin:0; text-align:center;">${roomBackgrounds[id] || ''}</pre>`;
+    let html = `<pre class="room-bg ascii-art" style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity:0.6; z-index:1; font-size:45px; line-height:1.0; color:#fff; margin:0; text-align:center;">${roomBackgrounds[id] || ''}</pre>`;
 
     if (id === '2') {
         html = '<div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:40px; color:#555; text-align:center; width: 100%;">- SEM SINAL VISUAL -<br>🔊 <i>Ruídos de Panelas</i></div>';
     } else if (id === '3') {
         let s = animatronics.Corredor.state;
-        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:80px; position:absolute; left:-180px; top:-50px;">🦊</span>' : '<span style="font-size:150px; position:absolute; left:-150px; top:-80px;">🦊</span>');
+        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:80px; position:absolute; left: 0; top: 0; transform: translate(-150%, -50%);">🦊</span>' : '<span style="font-size:150px; position:absolute; left: 0; top: 0; transform: translate(-100%, -50%);">🦊</span>');
         html = `<div style="z-index:2; position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">${foxy}</div>` + html;
     } else {
         let anims = '';
         for (let k in animatronics) {
             if (animatronics[k].pos === id && k !== 'Corredor') anims += animatronics[k].emoji;
         }
-        html = `<div style="z-index:2; position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:120px; width:100%; text-align:center; margin-top:-20px;">${anims}</div>` + html;
+        html = `<div style="z-index:2; position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:150px; width:100%; text-align:center;">${anims}</div>` + html;
     }
     document.getElementById('animatronics-view').innerHTML = html;
 }
