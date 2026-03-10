@@ -196,9 +196,15 @@ function updateUsage() {
     if (isLeftLightOn) usage++;
     if (isRightLightOn) usage++;
     if (isMonitorOpen) usage++;
-    let b = '|';
-    for (let i = 1; i < usage; i++) b += '|';
-    hud.usage.innerText = b;
+    hud.usage.innerHTML = '';
+    for (let i = 0; i < usage; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'usage-block';
+        if (usage <= 2) bar.style.backgroundColor = '#33cc33';
+        else if (usage <= 4) bar.style.backgroundColor = '#ffcc00';
+        else bar.style.backgroundColor = '#ff1a1a';
+        hud.usage.appendChild(bar);
+    }
 }
 
 function toggleDoor(side) {
@@ -355,19 +361,19 @@ function checkAttacks() {
 
 function renderCamView(id) {
     const roomBackgrounds = {
-        '1': '   .==================.\n  ||                  ||\n  ||    [SHOWTIME]    ||\n  ||                  ||\n  \'====================\'',
+        '1': 'PALCO PRINCIPAL',
         '2': '',
-        '3': '      ____________\n     /|          |\\\n    / |  PIRATE  | \\\n   /__|   COVE   |__\\\n  |___|__________|___|',
-        '4a': ' |\\        /|\n | \\      / |\n |  \\    /  |\n |   |  |   |\n |   |  |   |',
-        '4b': ' |\\         |\n | \\        |\n |  \\       |\n |   \\      |\n |____\\     |',
-        '5a': ' |\\        /|\n | \\      / |\n |  \\    /  |\n |   |  |   |\n |   |  |   |',
-        '5b': ' |         /|\n |        / |\n |       /  |\n |      /   |\n |     /____|',
-        '6': '   ____ \n  [____]\n  [____]\n  [____]\n  [____]',
-        '7': '  ___    ___\n |   |  |   |\n |   |  |   |\n |___|  |___|',
-        '8': '    _ \n   / \\ \n  |___| \n   | |  \n __|_|__'
+        '3': 'COVA DO PIRATA',
+        '4a': 'CORREDOR OESTE',
+        '4b': 'CANTO OESTE',
+        '5a': 'CORREDOR LESTE',
+        '5b': 'CANTO LESTE',
+        '6': 'ÁREA DE SERVIÇO',
+        '7': 'BANHEIROS',
+        '8': 'SALÃO DE FESTAS'
     };
 
-    let html = `<pre class="room-bg ascii-art" style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity:0.6; z-index:1; font-size:45px; line-height:1.0; color:#fff; margin:0; text-align:center;">${roomBackgrounds[id] || ''}</pre>`;
+    let html = `<div class="room-label" style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity:0.2; z-index:1; font-size:40px; color:#fff; margin:0; text-align:center; width: 100%; font-weight: bold;">${roomBackgrounds[id] || ''}</div>`;
 
     if (id === '2') {
         html = '<div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:40px; color:#555; text-align:center; width: 100%;">- SEM SINAL VISUAL -<br>🔊 <i>Ruídos de Panelas</i></div>';
