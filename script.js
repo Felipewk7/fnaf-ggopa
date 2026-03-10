@@ -49,18 +49,27 @@ const hud = {
     usage: document.getElementById('usage-bars')
 };
 
+console.log("FNAF-GGOPA: Script de áudio carregado!");
+
 // --- SOUNDS ---
-const sounds = {
-    menu: new Audio('assets/sounds/menu.mp3.mp3'),
-    ambience: new Audio('assets/sounds/ambience.mp3.mp3'),
-    kitchen: new Audio('assets/sounds/kitchen.mp3.mp3'),
-    door: new Audio('assets/sounds/door.mp3.mp3'),
-    light: new Audio('assets/sounds/light.mp3.mp3'),
-    monitor: new Audio('assets/sounds/monitor.mp3.mp3'),
-    powerout: new Audio('assets/sounds/powerout.mp3.mp3'),
-    jumpscare: new Audio('assets/sounds/jumpscare.mp3.mp3'),
-    blip: new Audio('assets/sounds/blip.mp3.mp3')
+const sounds = {};
+const soundFiles = {
+    menu: 'menu.mp3.mp3',
+    ambience: 'ambience.mp3.mp3',
+    kitchen: 'kitchen.mp3.mp3',
+    door: 'door.mp3.mp3',
+    light: 'light.mp3.mp3',
+    monitor: 'monitor.mp3.mp3',
+    powerout: 'powerout.mp3.mp3',
+    jumpscare: 'jumpscare.mp3.mp3',
+    blip: 'blip.mp3.mp3'
 };
+
+// Inicializa os sons com tratamento de erro básico
+for (let s in soundFiles) {
+    sounds[s] = new Audio('./assets/sounds/' + soundFiles[s]);
+    sounds[s].onerror = () => console.error("Falha ao carregar arquivo de áudio:", soundFiles[s]);
+}
 
 function showScreen(id) {
     // Esconde todas as telas
@@ -88,12 +97,17 @@ function showScreen(id) {
     }
 }
 
-function playSound(s, loop = false, volume = 1) {
-    if (sounds[s]) {
-        sounds[s].loop = loop;
-        sounds[s].volume = volume;
-        if (!loop) sounds[s].currentTime = 0;
-        sounds[s].play().catch(() => { });
+function playSound(s, loop = false, vol = 1) {
+    const audio = sounds[s];
+    if (audio) {
+        audio.loop = loop;
+        audio.volume = vol;
+        if (!loop) audio.currentTime = 0;
+        audio.play()
+            .then(() => console.log("Áudio tocando:", s))
+            .catch(e => console.warn("Áudio bloqueado:", s, e));
+    } else {
+        console.warn("Dicionário de som não contém:", s);
     }
 }
 
@@ -156,10 +170,22 @@ function init() {
     showScreen('menu');
 
     // SOLUÇÃO PARA O BLOQUEIO DE ÁUDIO DO NAVEGADOR (AUTO-PLAY)
-    // Toca a música assim que houver o primeiro clique ou interação
-    document.addEventListener('mousedown', function startMusic() {
-        if (sounds.menu.paused) playSound('menu', true, 0.4);
-        document.removeEventListener('mousedown', startMusic);
+    document.addEventListener('mousedown', function unlock() {
+        console.log("Desbloqueando áudios via interação...");
+        for (let s in sounds) {
+            let a = sounds[s];
+            a.play().then(() => {
+                a.pause();
+                a.currentTime = 0;
+            }).catch(e => { });
+        }
+
+        // Pequeno delay para garantir o desbloqueio
+        setTimeout(() => {
+            if (sounds.menu.paused) playSound('menu', true, 0.4);
+        }, 300);
+
+        document.removeEventListener('mousedown', unlock);
     }, { once: true });
 }
 
