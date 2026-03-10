@@ -356,7 +356,7 @@ function checkAttacks() {
 function renderCamView(id) {
     const roomBackgrounds = {
         '1': '   .==================.\n  ||                  ||\n  ||    [SHOWTIME]    ||\n  ||                  ||\n  \'====================\'',
-        '2': '', 
+        '2': '',
         '3': '      ____________\n     /|          |\\\n    / |  PIRATE  | \\\n   /__|   COVE   |__\\\n  |___|__________|___|',
         '4a': ' |\\        /|\n | \\      / |\n |  \\    /  |\n |   |  |   |\n |   |  |   |',
         '4b': ' |\\         |\n | \\        |\n |  \\       |\n |   \\      |\n |____\\     |',
@@ -367,20 +367,20 @@ function renderCamView(id) {
         '8': '    _ \n   / \\ \n  |___| \n   | |  \n __|_|__'
     };
 
-    let html = `<pre class="room-bg ascii-art" style="position:absolute; opacity:0.4; z-index:1; font-size:30px; line-height:1.2; color:#fff;">${roomBackgrounds[id] || ''}</pre>`;
+    let html = `<pre class="room-bg ascii-art" style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity:0.4; z-index:1; font-size:35px; line-height:1.2; color:#fff; margin:0; text-align:center;">${roomBackgrounds[id] || ''}</pre>`;
 
     if (id === '2') {
-        html = '<div style="font-size:40px; color:#555; text-align:center; padding-top:20px;">- SEM SINAL VISUAL -<br>🔊 <i>Ruídos de Panelas</i></div>';
+        html = '<div style="position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:40px; color:#555; text-align:center; width: 100%;">- SEM SINAL VISUAL -<br>🔊 <i>Ruídos de Panelas</i></div>';
     } else if (id === '3') {
         let s = animatronics.Corredor.state;
-        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:60px;">🦊</span>' : '<span style="font-size:120px;">🦊</span>');
-        html = `<div style="z-index:2; position:relative; display:flex; justify-content:center; align-items:center; height:100%; top:20px;">${foxy}</div>` + html;
+        let foxy = s === 0 ? '' : (s === 1 ? '<span style="font-size:80px; position:absolute; left:-180px; top:-50px;">🦊</span>' : '<span style="font-size:150px; position:absolute; left:-150px; top:-80px;">🦊</span>');
+        html = `<div style="z-index:2; position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">${foxy}</div>` + html;
     } else {
         let anims = '';
         for (let k in animatronics) {
             if (animatronics[k].pos === id && k !== 'Corredor') anims += animatronics[k].emoji;
         }
-        html = `<div style="z-index:2; position:relative; font-size:100px;">${anims}</div>` + html;
+        html = `<div style="z-index:2; position:absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size:120px; width:100%; text-align:center; margin-top:-20px;">${anims}</div>` + html;
     }
     document.getElementById('animatronics-view').innerHTML = html;
 }
