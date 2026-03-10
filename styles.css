@@ -245,15 +245,15 @@ body {
 
 .desk-surface {
     position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1400px;
-    height: 180px;
-    background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-    border-top: 10px solid #222;
-    box-shadow: 0 -20px 100px rgba(0, 0, 0, 1);
-    z-index: 10;
+    bottom: 0px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 1300px !important;
+    height: 160px !important;
+    background: linear-gradient(180deg, #181818 0%, #050505 100%) !important;
+    border-top: 6px solid #222 !important;
+    box-shadow: 0 -20px 80px rgba(0, 0, 0, 1) !important;
+    z-index: 10 !important;
 }
 
 .poster-clean {
@@ -278,16 +278,17 @@ body {
 }
 
 .monitor-base {
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-280px);
-    width: 220px;
-    height: 160px;
-    background: #111;
-    border: 8px solid #050505;
-    z-index: 20;
-    padding: 5px;
-    border-radius: 4px;
+    bottom: 30px !important;
+    left: 50% !important;
+    transform: translateX(-350px) !important;
+    /* Mais para a esquerda */
+    width: 250px !important;
+    height: 180px !important;
+    background: #0a0a0a !important;
+    border: 5px solid #000 !important;
+    z-index: 21 !important;
+    padding: 8px !important;
+    border-radius: 6px !important;
 }
 
 .monitor-screen {
@@ -330,12 +331,13 @@ body {
 }
 
 .fan-clean {
-    bottom: 60px;
-    left: 50%;
-    transform: translateX(150px);
-    width: 140px;
-    height: 160px;
-    z-index: 20;
+    bottom: 50px !important;
+    left: 50% !important;
+    transform: translateX(250px) !important;
+    /* Mais para a direita */
+    width: 150px !important;
+    height: 180px !important;
+    z-index: 21 !important;
 }
 
 .fan-base {
@@ -388,19 +390,21 @@ body {
 }
 
 .phone-props {
-    bottom: 60px;
-    right: 480px;
-    width: 100px;
-    height: 80px;
-    z-index: 20;
+    bottom: 30px !important;
+    left: 50% !important;
+    transform: translateX(-500px) !important;
+    width: 110px !important;
+    height: 90px !important;
+    z-index: 21 !important;
 }
 
 .desk-clutter {
-    bottom: 60px;
-    left: 480px;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(500px) !important;
     flex-direction: row !important;
-    gap: 20px;
-    z-index: 20;
+    gap: 30px !important;
+    z-index: 21 !important;
 }
 
 .paper-stack {
@@ -430,12 +434,14 @@ body {
 
 #cam-name {
     position: absolute;
-    top: 50px;
-    left: 50px;
-    font-size: 32px;
+    top: 30px;
+    left: 30px;
+    font-size: 38px;
     color: #fff;
-    z-index: 2000;
-    /* Keep it above everything */
+    z-index: 5000;
+    font-weight: bold;
+    text-shadow: 3px 3px 10px #000;
+    pointer-events: none;
 }
 
 #room {

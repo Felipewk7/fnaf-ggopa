@@ -36,7 +36,7 @@ let attackInNextTick = { Coelho: false, Ave: false, Observador: false };
 const screens = {
     menu: document.getElementById('main-menu'),
     office: document.getElementById('office'),
-    cams: document.getElementById('camera-system'),
+    "camera-system": document.getElementById('camera-system'),
     jumpscare: document.getElementById('jumpscare'),
     gameover: document.getElementById('game-over'),
     win: document.getElementById('win-screen')
@@ -243,10 +243,10 @@ function toggleMonitor() {
     playSound('monitor');
     isMonitorOpen = !isMonitorOpen;
     if (isMonitorOpen) {
-        screens.cams.classList.add('active');
+        showScreen('camera-system');
         switchCamera(currentCam);
     } else {
-        screens.cams.classList.remove('active');
+        showScreen('office');
         if (animatronics.Erro.pos === currentCam) triggerJumpscare('Erro');
     }
     updateUsage();
@@ -259,19 +259,18 @@ function switchCamera(id) {
     s.classList.add('heavy');
     setTimeout(() => s.classList.remove('heavy'), 150);
     const names = {
-        '1': 'PALCO',
+        '1': 'PALCO PRINCIPAL',
         '2': 'COZINHA',
-        '3': 'COVA',
-        '4a': 'CORREDOR ESQ',
-        '4b': 'CANTO ESQ',
-        '5a': 'CORREDOR DIR',
-        '5b': 'CANTO DIR',
-        '6': 'ÁREA DE SERVIÇO',
+        '3': 'PIRATE COVE',
+        '4a': 'CORREDOR OESTE',
+        '4b': 'CANTO OESTE',
+        '5a': 'CORREDOR LESTE',
+        '5b': 'CANTO LESTE',
+        '6': 'SUPRIMENTOS',
         '7': 'BANHEIROS',
-        '8': 'SALÃO DE FESTAS'
+        '8': 'SALÃO DE JANTAR'
     };
-    // Apenas atualiza o nome no topo se necessário, ou removemos para evitar repetição
-    document.getElementById('cam-name').innerText = `CAM ${id.toUpperCase()}`;
+    document.getElementById('cam-name').innerText = `CAM ${id.toUpperCase()} - ${names[id] || ''}`;
     renderCamView(id);
 }
 
