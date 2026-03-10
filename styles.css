@@ -46,18 +46,18 @@ body {
     display: block;
 }
 
-/* Explicit visibility logic for screens */
+/* Fullscreen Overlays (Centered) */
 #main-menu.active,
 #game-over.active,
 #win-screen.active,
-#victory-screen.active {
-    display: flex !important;
-}
-
+#victory-screen.active,
 #jumpscare.active {
     display: flex !important;
-    z-index: 99999;
-    /* Jumpscare no topo absoluto */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 50000;
 }
 
 #office.active,
@@ -66,18 +66,13 @@ body {
 }
 
 #main-menu {
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 100px;
     background-color: #080808;
-    /* Fallback caso a imagem não carregue */
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('./assets/menu_bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    z-index: 5000;
-    /* Aumentado para garantir que fique sobre o office */
+    padding: 0;
+    margin: 0;
 }
 
 #main-menu.active {
@@ -138,7 +133,7 @@ body {
 /* MAIN MENU CONTENT */
 #main-menu h1 {
     font-size: 100px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
     color: var(--red-alert);
 }
 
@@ -771,19 +766,17 @@ body {
     }
 }
 
+/* OVERLAY SCREENS STYLING */
 #game-over,
-#win-screen {
-    z-index: 6000;
-    /* Acima até dos jumpscares */
+#win-screen,
+#victory-screen {
     background: #000;
-    display: none !important;
+    z-index: 50000;
 }
 
-#game-over.active,
-#win-screen.active {
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
+#jumpscare {
+    background: #000;
+    z-index: 99999;
 }
 
 .end-content {
@@ -830,12 +823,6 @@ body {
 #victory-screen {
     background: radial-gradient(circle, #222 0%, #000 100%);
     color: #fff;
-    text-align: center;
-    z-index: 50000;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .victory-content {
